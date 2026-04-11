@@ -23,7 +23,7 @@
             --text-sub: #666;
             --primary-blue: #4a90e2;
             --primary-red: #e74c3c;
-            --primary-green: #2ecc71; /* 정답 팝업용 초록색 */
+            --primary-green: #2ecc71;
         }
 
         body {
@@ -136,18 +136,22 @@
             box-shadow: 0 15px 50px rgba(0,0,0,0.3); z-index: 200; backdrop-filter: blur(5px);
         }
 
-        /* O 정답 자동 사라짐 모달(토스트) 스타일 */
+        /* 🚀 팝업 애니메이션 확실하게 수정 */
         #success-toast {
             display: none; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
             background: rgba(235, 255, 240, 0.95); padding: 30px; border-radius: 20px;
             box-shadow: 0 10px 30px rgba(46, 204, 113, 0.3); z-index: 300; backdrop-filter: blur(5px);
-            border: 2px solid var(--primary-green); width: 70%; animation: fadeInOut 0.8s ease-in-out;
+            border: 2px solid var(--primary-green); width: 70%; opacity: 0;
+        }
+
+        .toast-anim {
+            animation: fadeInOut 0.8s ease-in-out forwards;
         }
 
         @keyframes fadeInOut {
-            0% { opacity: 0; transform: translate(-50%, -40%); }
-            20% { opacity: 1; transform: translate(-50%, -50%); }
-            80% { opacity: 1; transform: translate(-50%, -50%); }
+            0% { opacity: 0; transform: translate(-50%, -30%); }
+            15% { opacity: 1; transform: translate(-50%, -50%); }
+            85% { opacity: 1; transform: translate(-50%, -50%); }
             100% { opacity: 0; transform: translate(-50%, -60%); }
         }
 
@@ -243,7 +247,7 @@
         </div>
 
         <div id="success-toast">
-            <div class="jua-font" style="color:var(--primary-green); font-size:2rem; font-weight:bold;">정답입니다! 🎉</div>
+            <div class="jua-font" style="color:var(--primary-green); font-size:2.2rem; font-weight:bold;">정답입니다! 🎉</div>
         </div>
 
         <div id="alert-modal" class="modal-overlay">
@@ -294,11 +298,17 @@
             }
         }
 
-        // O 정답일 때 호출되는 토스트 함수
+        // 🚀 확실한 토스트 팝업 띄우기 함수 (애니메이션 강제 재시작)
         function showSuccessToast(callback) {
             const toast = document.getElementById('success-toast');
+            
+            // 기존 클래스 제거 후 강제 리플로우(새로고침 효과)
+            toast.classList.remove('toast-anim');
+            void toast.offsetWidth; 
+            
             toast.style.display = 'block';
-            // 0.8초(800ms) 뒤에 애니메이션 끝나면 숨기고 다음 문제로
+            toast.classList.add('toast-anim');
+
             setTimeout(() => {
                 toast.style.display = 'none';
                 if(callback) callback();
@@ -513,10 +523,8 @@
             }
             if (choice === correct) {
                 if (correct === 'X') {
-                    // X 문제의 정답인 경우 오답노트로 이동
                     showSection('note-input-section');
                 } else {
-                    // O 문제의 정답인 경우 멋진 토스트 메시지 띄우고 바로 다음 문제로
                     showSuccessToast(() => {
                         nextQuiz();
                     });
