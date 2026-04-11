@@ -166,16 +166,16 @@
 
     <div class="glass-card">
         <h1 id="quiz-title">
-            인천동양중학교 3학년 1학기 1회시험 대비
-            <span class="sub-title">역사 OX 퀴즈 문제창고</span>
+            인천동양중학교 3학년 1학기 1회시험 대비 ✍️
+            <span class="sub-title">역사 OX 퀴즈 문제창고 🏛️</span>
         </h1>
         
         <div class="progress-container" id="progress-container"><div id="progress-fill"></div></div>
 
         <div id="login-section" class="section active">
-            <input type="number" id="student-id" placeholder="학번 5자리 (예: 30101)">
-            <input type="text" id="student-name" placeholder="이름 (예: 김동양)">
-            <p style="margin: 15px 0 8px; font-weight: bold; font-size: 1rem; color: #444;">풀어볼 문제 수를 선택하세요</p>
+            <input type="number" id="student-id" placeholder="학번 5자리 (예: 30101) 🆔">
+            <input type="text" id="student-name" placeholder="이름 (예: 김동양) 👤">
+            <p style="margin: 15px 0 8px; font-weight: bold; font-size: 1rem; color: #444;">풀어볼 문제 수를 선택하세요 🎯</p>
             <select id="question-count">
                 <option value="10">10문제 (가볍게 몸풀기)</option>
                 <option value="20">20문제 (실력 점검)</option>
@@ -185,7 +185,7 @@
                 <option value="200">전체 문제 (끝장보기 🏆)</option>
             </select>
             <br>
-            <button class="main-btn start-btn" onclick="startQuiz()">퀴즈 시작하기</button>
+            <button class="main-btn start-btn" onclick="startQuiz()">퀴즈 시작하기 🚀</button>
         </div>
 
         <div id="quiz-section" class="section">
@@ -201,33 +201,33 @@
         </div>
 
         <div id="note-input-section" class="section">
-            <h2 style="font-size: 1.6rem; color: var(--primary-blue);">정답입니다! (X)</h2>
+            <h2 style="font-size: 1.6rem; color: var(--primary-blue);">정답입니다! (X) 💯</h2>
             <div class="notice">다른 친구들도 참고하니 바르게 고쳐 적어주세요.</div>
             <input type="text" id="note-input" placeholder="틀린 이유나 올바른 사실을 적어주세요.">
             <div style="display: flex; flex-direction: column; align-items: center; gap: 8px;">
-                <button id="submit-btn" class="main-btn" style="background:linear-gradient(45deg, #4facfe, #00f2fe);" onclick="submitNote()">등록하기</button>
-                <button class="main-btn skip-btn" onclick="skipNote()">건너뛰기</button>
+                <button id="submit-btn" class="main-btn" style="background:linear-gradient(45deg, #4facfe, #00f2fe);" onclick="submitNote()">등록하기 📝</button>
+                <button class="main-btn skip-btn" onclick="skipNote()">건너뛰기 ⏩</button>
             </div>
         </div>
 
         <div id="note-view-section" class="section">
-            <h2 style="font-size: 1.4rem;">친구들의 오답 노트</h2>
+            <h2 style="font-size: 1.4rem;">친구들의 오답 노트 👀</h2>
             <div class="note-list" id="note-list-container"></div>
-            <button class="main-btn" style="background: var(--btn-finish-gradient);" onclick="nextQuiz()">다음 문제로</button>
+            <button class="main-btn" style="background: var(--btn-finish-gradient);" onclick="nextQuiz()">다음 문제로 ➡️</button>
         </div>
 
         <div id="end-section" class="section">
-            <h2 style="font-size: 2rem;" id="final-msg">수고하셨습니다!</h2>
+            <h2 style="font-size: 2rem;" id="final-msg">수고하셨습니다! 🎉</h2>
             <div id="ranking-container" style="display: none;">
                 <h3 class="jua-font" style="font-size: 1.4rem; color: #d35400; margin-bottom: 10px;">🏆 명예의 전당 (Top 10)</h3>
                 <div class="ranking-box" id="ranking-list"></div>
             </div>
-            <button class="main-btn" style="background: var(--btn-finish-gradient);" onclick="location.reload()">처음으로 돌아가기</button>
+            <button class="main-btn" style="background: var(--btn-finish-gradient);" onclick="location.reload()">처음으로 돌아가기 🔄</button>
         </div>
 
         <div id="admin-panel" style="display: none; margin-top: 25px; gap: 15px; justify-content: center;">
-            <button onclick="resetNotes()" style="font-size: 0.9rem; background: #fab1a0; color: white; border: none; padding: 12px; border-radius: 12px; cursor: pointer;">오답노트 초기화</button>
-            <button onclick="resetRankings()" style="font-size: 0.9rem; background: #e17055; color: white; border: none; padding: 12px; border-radius: 12px; cursor: pointer;">랭킹 초기화</button>
+            <button onclick="resetNotes()" style="font-size: 0.9rem; background: #fab1a0; color: white; border: none; padding: 12px; border-radius: 12px; cursor: pointer;">🚨 오답노트 초기화</button>
+            <button onclick="resetRankings()" style="font-size: 0.9rem; background: #e17055; color: white; border: none; padding: 12px; border-radius: 12px; cursor: pointer;">🏆 랭킹 초기화</button>
         </div>
 
         <div id="alert-modal">
@@ -306,7 +306,7 @@
             { question: "고조선은 한의 침략에 1년여 동안 저항하였으나 지배층이 분열되면서 멸망하였다(기원전 108).", answer: "O" },
             { question: "고조선의 8조법에서 사람을 죽인 자는 노비로 삼았다.", answer: "X" },
             { question: "위만은 고조선에서 왕위를 빼앗고 중계 무역으로 많은 경제적 이익을 얻었다.", answer: "O" },
-            { question: "철기는 청동보다 재질 단단하여 무기와 농기구로 적합하였다.", answer: "O" },
+            { question: "철기는 청동보다 재질이 단단하여 무기와 농기구로 적합하였다.", answer: "O" },
             { question: "철기 문화가 보급되면서 청동기는 점차 의식용 도구로 변하였다.", answer: "O" },
             { question: "철기 문화의 보급으로 농업 생산량이 감소하였다.", answer: "X" },
             { question: "철기 시대에는 주거지가 직사각형의 지상 가옥으로 변화하였고 널무덤이나 독무덤 등이 만들어졌다.", answer: "O" },
@@ -433,8 +433,8 @@
             const sname = document.getElementById('student-name').value;
             const count = parseInt(document.getElementById('question-count').value);
 
-            if(!sid || !sname) return showAlert("학번과 이름을 모두 입력해주세요.");
-            if(sid.length !== 5) return showAlert("학번을 5자리로 입력해주세요.<br><span style='font-size:0.9rem; color:#666;'>(예: 30101)</span>");
+            if(!sid || !sname) return showAlert("학번과 이름을 모두 입력해주세요. 📝");
+            if(sid.length !== 5) return showAlert("학번을 5자리로 입력해주세요. 🔢<br><span style='font-size:0.9rem; color:#666;'>(예: 30101)</span>");
 
             correctCount = 0; answeredCount = 0;
             userInfo.id = sid; userInfo.name = sname; 
@@ -499,22 +499,23 @@
                 timestamp: firebase.firestore.FieldValue.serverTimestamp()
             }).then(() => {
                 document.getElementById('note-input').value = "";
-                btn.disabled = false; btn.innerText = "등록하기";
+                btn.disabled = false; btn.innerText = "등록하기 📝";
                 showOtherNotes();
             });
         }
 
         function skipNote() {
-            showAlert("오답 노트를 작성하지 않아<br>다른 사람의 노트를 볼 수 없습니다. 🤫", nextQuiz);
+            // 팝업 없이 바로 다음 문제로 넘어가기 (무임승차 페널티)
+            nextQuiz();
         }
 
         function showOtherNotes() {
             showSection('note-view-section');
             const container = document.getElementById('note-list-container');
-            container.innerHTML = "로딩 중...";
+            container.innerHTML = "로딩 중... ⏳";
             db.collection("quiz_notes").where("quizId", "==", allQuizzes.indexOf(selectedQuizzes[currentQuizIndex]))
               .orderBy("timestamp", "asc").get().then((snap) => {
-                  container.innerHTML = snap.empty ? "아직 작성된 오답 노트가 없습니다." : "";
+                  container.innerHTML = snap.empty ? "아직 작성된 오답 노트가 없습니다. 첫 번째 주인이 되어주세요! ✨" : "";
                   snap.forEach(doc => {
                       const n = doc.data();
                       container.innerHTML += `<div class="note-item"><span class="note-author">${n.author}</span><br>${n.text}</div>`;
@@ -546,7 +547,7 @@
 
         function saveAndLoadRanking(rate) {
             const listEl = document.getElementById('ranking-list');
-            listEl.innerHTML = "랭킹 기록 중...";
+            listEl.innerHTML = "랭킹 기록 중... ⏳";
             db.collection("quiz_rankings").add({
                 author: `${userInfo.id} ${userInfo.name}`,
                 score: rate, count: userInfo.max,
@@ -581,7 +582,7 @@
             if(confirm("오답노트를 모두 삭제할까요?")) {
                 db.collection("quiz_notes").get().then(s => {
                     const b = db.batch(); s.forEach(d => b.delete(d.ref)); return b.commit();
-                }).then(() => alert("삭제 완료"));
+                }).then(() => alert("삭제 완료 ✔️"));
             }
         }
 
@@ -589,7 +590,7 @@
             if(confirm("랭킹을 모두 삭제할까요?")) {
                 db.collection("quiz_rankings").get().then(s => {
                     const b = db.batch(); s.forEach(d => b.delete(d.ref)); return b.commit();
-                }).then(() => alert("삭제 완료"));
+                }).then(() => alert("삭제 완료 ✔️"));
             }
         }
     </script>
