@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>IDY 역사 OX 퀴즈</title>
+    <title>역사 OX 퀴즈</title>
     <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" />
     
     <link href="https://fonts.googleapis.com/css2?family=Jua&display=swap" rel="stylesheet">
@@ -571,20 +571,30 @@
             document.getElementById(id).classList.add('active');
         }
 
-        // 📌 관리자 패널 호출: 제목을 5번 연속 클릭하고, 비밀번호 '동양중' 입력
+        // 📌 관리자 패널 호출 로직 개선
         let adminCount = 0;
+        let adminTimer = null;
+
         document.getElementById('quiz-title').onclick = () => {
             adminCount++;
+            clearTimeout(adminTimer); // 이전 타이머 취소
+            
             if(adminCount >= 5) { 
                 adminCount = 0; 
-                const pwd = prompt("관리자 비밀번호를 입력하세요. 🔑");
-                if (pwd === "동양중") {
-                    document.getElementById('admin-panel').style.display = 'flex'; 
-                } else if (pwd !== null) {
-                    showAlert("<span style='color:var(--primary-red);'>비밀번호가 틀렸습니다. 😅</span>");
-                }
+                
+                // 모바일 브라우저에서 prompt가 씹히는 것을 방지하기 위해 약간의 딜레이
+                setTimeout(() => {
+                    const pwd = prompt("관리자 비밀번호를 입력하세요. 🔑");
+                    if (pwd === "동양중") {
+                        document.getElementById('admin-panel').style.display = 'flex'; 
+                    } else if (pwd !== null && pwd !== "") {
+                        showAlert("<span style='color:var(--primary-red);'>비밀번호가 틀렸습니다. 😅</span>");
+                    }
+                }, 50);
+            } else {
+                // 마지막 클릭 후 2초가 지나면 카운트 리셋
+                adminTimer = setTimeout(() => { adminCount = 0; }, 2000);
             }
-            setTimeout(() => adminCount = 0, 2000);
         };
 
         function resetNotes() {
