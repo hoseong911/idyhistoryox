@@ -136,7 +136,7 @@
             box-shadow: 0 15px 50px rgba(0,0,0,0.3); z-index: 200; backdrop-filter: blur(5px);
         }
 
-        /* 🚀 정답 팝업 (초록색) */
+        /* 정답 팝업 (초록색) */
         #success-toast {
             display: none; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
             background: rgba(235, 255, 240, 0.95); padding: 30px; border-radius: 20px;
@@ -144,7 +144,7 @@
             border: 2px solid var(--primary-green); width: 70%; opacity: 0;
         }
 
-        /* 🚨 오답 팝업 (빨간색) */
+        /* 오답 팝업 (빨간색) */
         #error-toast {
             display: none; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
             background: rgba(255, 235, 235, 0.95); padding: 30px; border-radius: 20px;
@@ -152,7 +152,6 @@
             border: 2px solid var(--primary-red); width: 70%; opacity: 0;
         }
 
-        /* 성공(정답) 애니메이션 - 0.8초 */
         .success-anim { animation: successFadeInOut 0.8s ease-in-out forwards; }
         @keyframes successFadeInOut {
             0% { opacity: 0; transform: translate(-50%, -30%); }
@@ -161,7 +160,6 @@
             100% { opacity: 0; transform: translate(-50%, -60%); }
         }
 
-        /* 에러(오답) 애니메이션 - 1.5초 */
         .error-anim { animation: errorFadeInOut 1.5s ease-in-out forwards; }
         @keyframes errorFadeInOut {
             0% { opacity: 0; transform: translate(-50%, -30%); }
@@ -229,7 +227,7 @@
         </div>
 
         <div id="note-input-section" class="section">
-            <h2 style="font-size: 1.6rem; color: var(--primary-blue);">정답입니다! (X) 💯</h2>
+            <h2 id="note-title" style="font-size: 1.6rem; color: var(--primary-blue);">정답입니다! (X) 💯</h2>
             <div class="notice">다른 친구들도 참고하니 바르게 고쳐 적어주세요.</div>
             <input type="text" id="note-input" placeholder="틀린 이유나 올바른 사실을 적어주세요.">
             <div style="display: flex; flex-direction: column; align-items: center; gap: 8px;">
@@ -317,11 +315,10 @@
             }
         }
 
-        // 정답 팝업 함수 (0.8초 애니메이션)
         function showSuccessToast(callback) {
             const toast = document.getElementById('success-toast');
             toast.classList.remove('success-anim');
-            void toast.offsetWidth; // 애니메이션 강제 초기화
+            void toast.offsetWidth; 
             toast.style.display = 'block';
             toast.classList.add('success-anim');
 
@@ -331,11 +328,10 @@
             }, 800);
         }
 
-        // 오답 팝업 함수 (1.5초 애니메이션)
         function showErrorToast(callback) {
             const toast = document.getElementById('error-toast');
             toast.classList.remove('error-anim');
-            void toast.offsetWidth; // 애니메이션 강제 초기화
+            void toast.offsetWidth; 
             toast.style.display = 'block';
             toast.classList.add('error-anim');
 
@@ -544,15 +540,20 @@
         }
 
         function checkAnswer(choice) {
+            // 팝업 애니메이션 도중 연타하는 것을 완벽 방지
+            if (!isFirstAttempt) return;
+
             const correct = selectedQuizzes[currentQuizIndex].answer;
-            if (isFirstAttempt) {
-                answeredCount++;
-                if (choice === correct) correctCount++;
-                isFirstAttempt = false;
-                updateAccuracyDisplay();
-            }
+            answeredCount++;
+            if (choice === correct) correctCount++;
+            isFirstAttempt = false;
+            updateAccuracyDisplay();
+
             if (choice === correct) {
+                // 정답을 맞춘 경우
                 if (correct === 'X') {
+                    document.getElementById('note-title').innerHTML = "정답입니다! (X) 💯";
+                    document.getElementById('note-title').style.color = "var(--primary-blue)";
                     showSection('note-input-section');
                 } else {
                     showSuccessToast(() => {
@@ -560,8 +561,18 @@
                     });
                 }
             } else {
-                // 오답일 때도 토스트 띄우기 (1.5초)
-                showErrorToast();
+                // 오답인 경우: 1.5초 토스트 후 자동으로 분기 이동
+                showErrorToast(() => {
+                    if (correct === 'X') {
+                        // 틀렸지만 원래 정답이 X인 경우 오답노트로
+                        document.getElementById('note-title').innerHTML = "아쉽네요, 정답은 (X) 입니다! 📝";
+                        document.getElementById('note-title').style.color = "var(--primary-red)";
+                        showSection('note-input-section');
+                    } else {
+                        // 틀렸고 원래 정답이 O인 경우 다음 문제로
+                        nextQuiz();
+                    }
+                });
             }
         }
 
