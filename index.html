@@ -64,6 +64,16 @@
         .section { display: none; }
         .active { display: block; }
 
+        /* 숫자 입력칸 화살표(스크롤) 숨기기 */
+        input[type="number"]::-webkit-outer-spin-button,
+        input[type="number"]::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+        input[type="number"] {
+            -moz-appearance: textfield;
+        }
+
         input[type="text"], input[type="number"], select {
             width: 85%; padding: 12px; border-radius: 10px; border: 1px solid #ddd;
             font-family: 'Pretendard', sans-serif; margin-bottom: 15px; font-size: 1rem;
@@ -104,9 +114,7 @@
         .rank-item:last-child { border-bottom: none; }
         .rank-medal { font-size: 1.1rem; margin-right: 5px; }
 
-        #admin-btn { display: none; margin-top: 20px; font-size: 0.8rem; background: #fab1a0; border: none; padding: 8px; border-radius: 5px; cursor: pointer; color: white; width: auto; }
-
-        /* 📱 모바일 최적화 (작은 화면에서 꽉 차게 조절) */
+        /* 📱 모바일 최적화 */
         @media screen and (max-width: 480px) {
             .glass-card { width: 95%; padding: 20px 15px; }
             h1 { font-size: 1.3rem; margin-bottom: 15px; }
@@ -125,7 +133,7 @@
         <div class="progress-container" id="progress-container"><div id="progress-fill"></div></div>
 
         <div id="login-section" class="section active">
-            <input type="number" id="student-id" placeholder="학번 (예: 30101)">
+            <input type="number" id="student-id" placeholder="학번 5자리 (예: 30101)">
             <input type="text" id="student-name" placeholder="이름 (예: 김동양)">
             <p style="margin: 10px 0 5px; font-weight: bold; font-size: 0.95rem;">풀어볼 문제 수를 선택하세요</p>
             <select id="question-count">
@@ -184,14 +192,17 @@
             </div>
         </div>
 
+        <div id="admin-panel" style="display: none; margin-top: 20px; gap: 10px; justify-content: center;">
+            <button onclick="resetNotes()" style="font-size: 0.85rem; background: #fab1a0; border: none; padding: 10px 15px; border-radius: 8px; cursor: pointer; color: white;">🚨 오답노트 초기화</button>
+            <button onclick="resetRankings()" style="font-size: 0.85rem; background: #e17055; border: none; padding: 10px 15px; border-radius: 8px; cursor: pointer; color: white;">🏆 랭킹 초기화</button>
+        </div>
+
         <div id="custom-modal">
             <div class="modal-msg">아쉬워요! 틀렸습니다. 🧐</div>
             <div style="display: flex; justify-content: center;">
                 <button class="main-btn" onclick="closeModal()">다시 생각해보기</button>
             </div>
         </div>
-
-        <button id="admin-btn" onclick="resetComments()">🚨 전체 오답노트/랭킹 초기화</button>
     </div>
 
     <script>
@@ -215,7 +226,6 @@
         let answeredCount = 0;
         let isFirstAttempt = true;
 
-        // 선생님의 200문제 창고 (길이 관계상 생략하지 않고 그대로 유지)
         const allQuizzes = [
             { question: "구석기 시대 사람들은 뗀석기를 사용하였다.", answer: "O" },
             { question: "구석기 시대 사람들은 주로 정착 생활을 하였다.", answer: "X" },
@@ -440,6 +450,7 @@
             const count = parseInt(document.getElementById('question-count').value);
 
             if(!sid || !sname) return alert("학번과 이름을 모두 입력해주세요!");
+            if(sid.length !== 5) return alert("학번은 반드시 5자리 숫자로 입력해주세요! (예: 30101)");
 
             correctCount = 0; answeredCount = 0;
             
@@ -566,7 +577,6 @@
             const finalRate = answeredCount === 0 ? 0 : Math.round((correctCount / answeredCount) * 100);
             document.getElementById('final-msg').innerText = `🎉 완료! 최종 정답률: ${finalRate}%`;
 
-            // 30문제 이상 풀었을 때만 랭킹 등록 및 표시
             if (userInfo.max >= 30) {
                 document.getElementById('ranking-container').style.display = 'block';
                 saveAndLoadRanking(finalRate);
@@ -579,18 +589,13 @@
             const listEl = document.getElementById('ranking-list');
             listEl.innerHTML = "<p style='text-align:center; color:#666;'>랭킹을 업데이트하고 있습니다... ⏳</p>";
             
-            // 랭킹 저장 (새로운 컬렉션 'quiz_rankings' 사용)
             db.collection("quiz_rankings").add({
                 author: `${userInfo.id} ${userInfo.name}`,
                 score: rate,
                 count: userInfo.max,
                 timestamp: firebase.firestore.FieldValue.serverTimestamp()
             }).then(() => {
-                // 저장 완료 후 상위 10명 불러오기
-                db.collection("quiz_rankings")
-                  .orderBy("score", "desc") // 정답률 높은 순
-                  .limit(10)
-                  .get()
+                db.collection("quiz_rankings").orderBy("score", "desc").limit(10).get()
                   .then(snapshot => {
                       listEl.innerHTML = "";
                       let rank = 1;
@@ -608,30 +613,41 @@
             });
         }
 
+        // 비밀 관리자 모드: 제목 5번 연속 클릭 시 관리자 패널(두 개의 버튼) 표시
         let count = 0;
         document.getElementById('quiz-title').onclick = () => {
             count++;
-            if(count >= 5) { document.getElementById('admin-btn').style.display = 'inline-block'; count = 0; }
+            if(count >= 5) { 
+                document.getElementById('admin-panel').style.display = 'flex'; 
+                count = 0; 
+            }
             setTimeout(() => count = 0, 2000);
         };
 
-        function resetComments() {
-            if(confirm("모든 오답노트와 랭킹 데이터를 삭제할까요?")) {
-                // 오답노트 삭제
-                db.collection("quiz_notes").get().then(snap => {
+        // 오답노트 초기화
+        function resetNotes() {
+            if(confirm("모든 '오답 노트' 데이터를 완전히 삭제하시겠습니까?")) {
+                db.collection("quiz_notes").get().then((snap) => {
                     const batch = db.batch();
-                    snap.forEach(doc => batch.delete(doc.ref));
+                    snap.forEach((doc) => { batch.delete(doc.ref); });
                     return batch.commit();
                 }).then(() => {
-                    // 랭킹 삭제
-                    return db.collection("quiz_rankings").get().then(snap => {
-                        const batch = db.batch();
-                        snap.forEach(doc => batch.delete(doc.ref));
-                        return batch.commit();
-                    });
+                    alert("오답 노트가 초기화되었습니다.");
+                    document.getElementById('admin-panel').style.display = 'none';
+                });
+            }
+        }
+
+        // 랭킹 초기화
+        function resetRankings() {
+            if(confirm("모든 '랭킹(명예의 전당)' 데이터를 완전히 삭제하시겠습니까?")) {
+                db.collection("quiz_rankings").get().then((snap) => {
+                    const batch = db.batch();
+                    snap.forEach((doc) => { batch.delete(doc.ref); });
+                    return batch.commit();
                 }).then(() => {
-                    alert("전체 데이터가 초기화되었습니다.");
-                    location.reload();
+                    alert("랭킹 데이터가 초기화되었습니다.");
+                    document.getElementById('admin-panel').style.display = 'none';
                 });
             }
         }
