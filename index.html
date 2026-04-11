@@ -505,7 +505,7 @@
         }
 
         function skipNote() {
-            // 팝업 없이 바로 다음 문제로 넘어가기 (무임승차 페널티)
+            // 건너뛰기 클릭 시 팝업 없이 바로 다음 문제로 이동
             nextQuiz();
         }
 
@@ -571,10 +571,19 @@
             document.getElementById(id).classList.add('active');
         }
 
+        // 📌 관리자 패널 호출: 제목을 5번 연속 클릭하고, 비밀번호 '동양중' 입력
         let adminCount = 0;
         document.getElementById('quiz-title').onclick = () => {
             adminCount++;
-            if(adminCount >= 5) { document.getElementById('admin-panel').style.display = 'flex'; adminCount = 0; }
+            if(adminCount >= 5) { 
+                adminCount = 0; 
+                const pwd = prompt("관리자 비밀번호를 입력하세요. 🔑");
+                if (pwd === "동양중") {
+                    document.getElementById('admin-panel').style.display = 'flex'; 
+                } else if (pwd !== null) {
+                    showAlert("<span style='color:var(--primary-red);'>비밀번호가 틀렸습니다. 😅</span>");
+                }
+            }
             setTimeout(() => adminCount = 0, 2000);
         };
 
