@@ -23,6 +23,7 @@
             --text-sub: #666;
             --primary-blue: #4a90e2;
             --primary-red: #e74c3c;
+            --primary-green: #2ecc71; /* 정답 팝업용 초록색 */
         }
 
         body {
@@ -55,7 +56,6 @@
 
         .glass-card::-webkit-scrollbar { display: none; }
         
-        /* 폰트 이원화: 제목과 포인트 텍스트는 주아체 */
         h1, h2, .ox-btn, .jua-font { 
             font-family: 'Jua', sans-serif; 
             font-weight: normal; 
@@ -90,7 +90,6 @@
         .section { display: none; }
         .active { display: block; }
 
-        /* 숫자 입력칸 화살표 숨기기 */
         input[type="number"]::-webkit-outer-spin-button,
         input[type="number"]::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
         input[type="number"] { -moz-appearance: textfield; }
@@ -101,7 +100,6 @@
             text-align: center; background: rgba(255, 255, 255, 0.9); box-sizing: border-box;
         }
 
-        /* 둥글둥글 그라데이션 버튼 */
         .main-btn {
             font-family: 'Pretendard', sans-serif; font-size: 1.1rem; font-weight: 800;
             padding: 15px 30px; border: none; border-radius: 50px; 
@@ -132,11 +130,25 @@
         .btn-o { background: var(--btn-o-gradient); color: white; }
         .btn-x { background: var(--btn-x-gradient); color: white; }
 
-        /* 통합 커스텀 팝업 (모달) */
         .modal-overlay {
             display: none; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
             width: 85%; background: rgba(255, 255, 255, 0.98); padding: 40px 20px; border-radius: 25px;
             box-shadow: 0 15px 50px rgba(0,0,0,0.3); z-index: 200; backdrop-filter: blur(5px);
+        }
+
+        /* O 정답 자동 사라짐 모달(토스트) 스타일 */
+        #success-toast {
+            display: none; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+            background: rgba(235, 255, 240, 0.95); padding: 30px; border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(46, 204, 113, 0.3); z-index: 300; backdrop-filter: blur(5px);
+            border: 2px solid var(--primary-green); width: 70%; animation: fadeInOut 0.8s ease-in-out;
+        }
+
+        @keyframes fadeInOut {
+            0% { opacity: 0; transform: translate(-50%, -40%); }
+            20% { opacity: 1; transform: translate(-50%, -50%); }
+            80% { opacity: 1; transform: translate(-50%, -50%); }
+            100% { opacity: 0; transform: translate(-50%, -60%); }
         }
 
         .ranking-box { background: rgba(255, 255, 255, 0.8); border-radius: 20px; padding: 20px; margin: 25px 0; text-align: left; max-height: 250px; overflow-y: auto; }
@@ -230,6 +242,10 @@
             </div>
         </div>
 
+        <div id="success-toast">
+            <div class="jua-font" style="color:var(--primary-green); font-size:2rem; font-weight:bold;">정답입니다! 🎉</div>
+        </div>
+
         <div id="alert-modal" class="modal-overlay">
             <div id="alert-msg" class="jua-font" style="color:var(--text-main); margin-bottom:25px; font-size:1.4rem; line-height: 1.4;"></div>
             <div style="display: flex; justify-content: center;">
@@ -276,6 +292,17 @@
                 alertCallback = null;
                 cb();
             }
+        }
+
+        // O 정답일 때 호출되는 토스트 함수
+        function showSuccessToast(callback) {
+            const toast = document.getElementById('success-toast');
+            toast.style.display = 'block';
+            // 0.8초(800ms) 뒤에 애니메이션 끝나면 숨기고 다음 문제로
+            setTimeout(() => {
+                toast.style.display = 'none';
+                if(callback) callback();
+            }, 800);
         }
 
         const allQuizzes = [
@@ -485,8 +512,15 @@
                 updateAccuracyDisplay();
             }
             if (choice === correct) {
-                if (correct === 'X') showSection('note-input-section');
-                else nextQuiz();
+                if (correct === 'X') {
+                    // X 문제의 정답인 경우 오답노트로 이동
+                    showSection('note-input-section');
+                } else {
+                    // O 문제의 정답인 경우 멋진 토스트 메시지 띄우고 바로 다음 문제로
+                    showSuccessToast(() => {
+                        nextQuiz();
+                    });
+                }
             } else {
                 showAlert("<span style='color:var(--primary-red);'>아쉬워요! 틀렸습니다. 🤔</span>");
             }
@@ -577,7 +611,6 @@
             document.getElementById(id).classList.add('active');
         }
 
-        // 📌 완벽해진 전용 모달 비밀번호 호출 로직
         let adminCount = 0;
         let adminTimer = null;
 
