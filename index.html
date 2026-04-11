@@ -46,10 +46,23 @@
             overflow-y: auto;
         }
 
-        /* 스크롤바 숨기기 */
         .glass-card::-webkit-scrollbar { display: none; }
         
-        h1 { font-size: 1.5rem; margin-bottom: 20px; cursor: pointer; user-select: none; line-height: 1.3; }
+        /* 제목 스타일: 두 줄 구성 및 크기 최적화 */
+        h1 { 
+            font-size: 1.4rem; 
+            margin-bottom: 25px; 
+            cursor: pointer; 
+            user-select: none; 
+            line-height: 1.5;
+            word-break: keep-all;
+        }
+        h1 span.sub-title {
+            font-size: 1.6rem;
+            display: block;
+            margin-top: 5px;
+            font-weight: 800;
+        }
 
         .progress-container {
             width: 100%; height: 8px; background: rgba(255, 255, 255, 0.3);
@@ -64,15 +77,10 @@
         .section { display: none; }
         .active { display: block; }
 
-        /* 숫자 입력칸 화살표(스크롤) 숨기기 */
+        /* 숫자 입력칸 화살표 숨기기 */
         input[type="number"]::-webkit-outer-spin-button,
-        input[type="number"]::-webkit-inner-spin-button {
-            -webkit-appearance: none;
-            margin: 0;
-        }
-        input[type="number"] {
-            -moz-appearance: textfield;
-        }
+        input[type="number"]::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+        input[type="number"] { -moz-appearance: textfield; }
 
         input[type="text"], input[type="number"], select {
             width: 85%; padding: 12px; border-radius: 10px; border: 1px solid #ddd;
@@ -87,7 +95,6 @@
             transition: all 0.2s; margin: 5px; width: 85%; max-width: 300px;
         }
         .main-btn:hover { transform: translateY(-2px); background: #fdfdfd; }
-        .main-btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
 
         #question-text { font-size: 1.3rem; font-weight: 600; margin: 20px 0 30px 0; line-height: 1.5; word-break: keep-all; min-height: 80px; }
         
@@ -101,34 +108,26 @@
             width: 80%; background: rgba(255, 255, 255, 0.95); padding: 30px; border-radius: 20px;
             box-shadow: 0 10px 40px rgba(0,0,0,0.2); z-index: 100; backdrop-filter: blur(5px);
         }
-        .modal-msg { font-size: 1.2rem; font-weight: bold; margin-bottom: 20px; color: var(--primary-red); }
 
-        .notice { font-size: 0.85rem; color: #d63031; background: #fff5f5; padding: 10px; border-radius: 8px; margin-bottom: 15px; }
-        .note-list { max-height: 150px; overflow-y: auto; text-align: left; background: rgba(255, 255, 255, 0.6); padding: 15px; border-radius: 10px; margin-bottom: 20px; }
-        .note-item { margin-bottom: 8px; font-size: 0.9rem; border-bottom: 1px dashed #ddd; padding-bottom: 5px; }
-        .note-author { font-weight: bold; color: var(--primary-blue); }
-
-        /* 랭킹 영역 스타일 */
         .ranking-box { background: rgba(255, 255, 255, 0.7); border-radius: 15px; padding: 15px; margin: 20px 0; text-align: left; max-height: 200px; overflow-y: auto; }
-        .rank-item { display: flex; justify-content: space-between; padding: 8px 5px; border-bottom: 1px solid #eee; font-size: 0.95rem; font-weight: 500; }
-        .rank-item:last-child { border-bottom: none; }
-        .rank-medal { font-size: 1.1rem; margin-right: 5px; }
+        .rank-item { display: flex; justify-content: space-between; padding: 8px 5px; border-bottom: 1px solid #eee; font-size: 0.95rem; }
 
         /* 📱 모바일 최적화 */
         @media screen and (max-width: 480px) {
-            .glass-card { width: 95%; padding: 20px 15px; }
-            h1 { font-size: 1.3rem; margin-bottom: 15px; }
-            #question-text { font-size: 1.2rem; min-height: 60px; margin-bottom: 20px; }
-            .ox-btn { padding: 15px 0; width: 100px; font-size: 1.8rem; }
-            .main-btn { width: 95%; font-size: 1rem; padding: 10px 20px; }
-            input[type="text"], input[type="number"], select { width: 95%; font-size: 0.95rem; }
+            h1 { font-size: 1.15rem; }
+            h1 span.sub-title { font-size: 1.35rem; }
+            #question-text { font-size: 1.2rem; }
+            .ox-btn { width: 100px; }
         }
     </style>
 </head>
 <body>
 
     <div class="glass-card">
-        <h1 id="quiz-title">✨ 인천동양중 3학년 1학기<br>1회시험 대비 역사 OX 퀴즈 ✨</h1>
+        <h1 id="quiz-title">
+            인천동양중학교 3학년 1학기 1회시험 대비
+            <span class="sub-title">역사 ox퀴즈 문제창고</span>
+        </h1>
         
         <div class="progress-container" id="progress-container"><div id="progress-fill"></div></div>
 
@@ -144,13 +143,12 @@
                 <option value="100">100문제 (시험 대비 마스터 🏆)</option>
                 <option value="200">전체 문제 (끝장보기 🔥🏆)</option>
             </select>
-            <p style="font-size: 0.8rem; color: #777; margin-top:0;">* 30문제 이상 풀면 랭킹에 등록됩니다!</p>
             <br>
             <button class="main-btn" onclick="startQuiz()" style="background:var(--primary-blue); color:white;">퀴즈 시작!</button>
         </div>
 
         <div id="quiz-section" class="section">
-            <div id="status-container">
+            <div id="status-container" style="display:none;">
                 <div id="quiz-status"></div>
                 <div id="accuracy-status">정답률: -%</div>
             </div>
@@ -162,7 +160,7 @@
         </div>
 
         <div id="note-input-section" class="section">
-            <h2 style="font-size: 1.2rem; color: var(--primary-blue);">정답입니다! (X)</h2>
+            <h2 style="font-size: 1.2rem; color: var(--primary-blue);">정답입니다! (X) 🎉</h2>
             <div class="notice">🚨 다른 친구들도 참고하니 바르게 고쳐 적어주세요!</div>
             <input type="text" id="note-input" placeholder="틀린 이유를 적어주세요.">
             <div style="display: flex; flex-direction: column; align-items: center; gap: 5px;">
@@ -172,41 +170,32 @@
         </div>
 
         <div id="note-view-section" class="section">
-            <h2 style="font-size: 1.1rem;">친구들의 오답 노트</h2>
+            <h2 style="font-size: 1.1rem;">친구들의 오답 노트 👀</h2>
             <div class="note-list" id="note-list-container"></div>
-            <div style="display: flex; justify-content: center;">
-                <button class="main-btn" onclick="nextQuiz()">다음 문제</button>
-            </div>
+            <button class="main-btn" onclick="nextQuiz()">다음 문제</button>
         </div>
 
         <div id="end-section" class="section">
             <h2 style="font-size: 1.4rem;" id="final-msg">🎉 수고하셨습니다!</h2>
-            
             <div id="ranking-container" style="display: none;">
-                <h3 style="font-size: 1.1rem; color: #d35400; margin-bottom: 5px;">🏆 명예의 전당 (Top 10)</h3>
-                <div class="ranking-box" id="ranking-list">데이터를 불러오는 중...</div>
+                <h3 style="font-size: 1.1rem; color: #d35400;">🏆 명예의 전당 (Top 10)</h3>
+                <div class="ranking-box" id="ranking-list"></div>
             </div>
-
-            <div style="display: flex; justify-content: center; margin-top: 20px;">
-                <button class="main-btn" style="background:var(--primary-blue); color:white;" onclick="location.reload()">🔄 처음으로 돌아가기</button>
-            </div>
+            <button class="main-btn" style="background:var(--primary-blue); color:white;" onclick="location.reload()">🔄 처음으로 돌아가기</button>
         </div>
 
         <div id="admin-panel" style="display: none; margin-top: 20px; gap: 10px; justify-content: center;">
-            <button onclick="resetNotes()" style="font-size: 0.85rem; background: #fab1a0; border: none; padding: 10px 15px; border-radius: 8px; cursor: pointer; color: white;">🚨 오답노트 초기화</button>
-            <button onclick="resetRankings()" style="font-size: 0.85rem; background: #e17055; border: none; padding: 10px 15px; border-radius: 8px; cursor: pointer; color: white;">🏆 랭킹 초기화</button>
+            <button onclick="resetNotes()" style="font-size: 0.8rem; background: #fab1a0; color: white; border: none; padding: 10px; border-radius: 8px; cursor: pointer;">🚨 오답노트 초기화</button>
+            <button onclick="resetRankings()" style="font-size: 0.8rem; background: #e17055; color: white; border: none; padding: 10px; border-radius: 8px; cursor: pointer;">🏆 랭킹 초기화</button>
         </div>
 
         <div id="custom-modal">
-            <div class="modal-msg">아쉬워요! 틀렸습니다. 🧐</div>
-            <div style="display: flex; justify-content: center;">
-                <button class="main-btn" onclick="closeModal()">다시 생각해보기</button>
-            </div>
+            <div class="modal-msg" style="font-weight:bold; color:var(--primary-red); margin-bottom:20px;">아쉬워요! 틀렸습니다. 🧐</div>
+            <button class="main-btn" onclick="closeModal()">다시 생각해보기</button>
         </div>
     </div>
 
     <script>
-        // 파이어베이스 설정
         const firebaseConfig = {
             apiKey: "AIzaSyDOsvNxPNjYto92hfzGXyrRLce5F1sHtiQ",
             authDomain: "historyoxquiz.firebaseapp.com",
@@ -215,16 +204,11 @@
             messagingSenderId: "353431656454",
             appId: "1:353431656454:web:4ae6d8bb9a59fe0902cb87"
         };
-        
         firebase.initializeApp(firebaseConfig);
         const db = firebase.firestore();
 
         let userInfo = { id: "", name: "", max: 0 };
-        let currentQuizIndex = 0;
-        let selectedQuizzes = [];
-        let correctCount = 0;
-        let answeredCount = 0;
-        let isFirstAttempt = true;
+        let currentQuizIndex = 0, selectedQuizzes = [], correctCount = 0, answeredCount = 0, isFirstAttempt = true;
 
         const allQuizzes = [
             { question: "구석기 시대 사람들은 뗀석기를 사용하였다.", answer: "O" },
@@ -370,78 +354,17 @@
             { question: "고구려는 수도에 태학을 세워 유교 경전을 가르쳤다.", answer: "O" },
             { question: "백제는 오경박사를 두어 유교 경전을 가르쳤다.", answer: "O" },
             { question: "신라는 한자의 뜻과 소리를 따서 만든 이두를 사용하였다.", answer: "O" },
-            { question: "신라는 첨성대를 만들어 천문 현상을 관측하였다.", answer: "O" },
-            { question: "고구려는 오경박사를 두어 유교 경전을 가르쳤다.", answer: "X" },
-            { question: "신라는 태학을 세워 유교 경전을 가르쳤다.", answer: "X" },
-            { question: "백제의 산수무늬 벽돌은 자연과 더불어 살고자 하는 도교적 생각을 담고 있다.", answer: "O" },
-            { question: "고구려 초기의 무덤 양식은 돌무지무덤이었으나 점차 굴식 돌방무덤으로 바뀌었다.", answer: "O" },
-            { question: "굴식 돌방무덤의 벽면과 천장에는 다양한 벽화가 그려져 있다.", answer: "O" },
-            { question: "고구려 고분 벽화 중 초기에는 인물 초상화나 생활 풍속이 주로 그려졌고, 후기에는 사신도가 많이 그려졌다.", answer: "O" },
-            { question: "백제는 한성 시기에 고구려와 유사한 돌무지무덤을 만들었다.", answer: "O" },
-            { question: "백제 웅진 시기에는 중국 남조의 영향을 받은 벽돌무덤이 만들어졌다.", answer: "O" },
-            { question: "신라의 대표적 무덤 양식인 돌무지덧널무덤은 구조상 도굴이 어려워 껴묻거리가 많이 남아 있다.", answer: "O" },
-            { question: "신라의 돌무지덧널무덤은 구조상 벽화를 그릴 수 있었다.", answer: "X" },
-            { question: "천마총과 황남대총은 신라의 대표적인 돌무지덧널무덤이다.", answer: "O" },
-            { question: "고구려 초기 무덤 양식인 굴식 돌방무덤은 이후 돌무지무덤으로 변화하였다.", answer: "X" },
-            { question: "신라는 고구려와 백제의 영향으로 점차 굴식 돌방무덤으로 변화하였다.", answer: "O" },
-            { question: "백제의 벽돌무덤은 중국 북조의 영향을 받아 만들어졌다.", answer: "X" },
-            { question: "삼국 가운데 일본과 가장 활발하게 교류한 나라는 백제로, 한문·유교 경전·불교 등을 일본에 전하였다.", answer: "O" },
-            { question: "고구려는 종이와 먹의 제조 방법을 일본에 전하였다.", answer: "O" },
-            { question: "신라는 배 만드는 기술과 둑 쌓는 기술을 일본에 전하였다.", answer: "O" },
-            { question: "가야는 철로 만든 갑옷과 토기 제작 기술을 일본에 전하였다.", answer: "O" },
-            { question: "일본의 다카마쓰 고분 벽화는 신라 고분 벽화의 영향을 받았다.", answer: "X" },
-            { question: "일본의 스에키는 가야 토기의 영향을 받아 제작되었다.", answer: "O" },
-            { question: "삼국 가운데 일본과 가장 활발하게 교류한 나라는 고구려이다.", answer: "X" },
-            { question: "백제는 일본에 조선술과 축제술을 전하였다.", answer: "X" },
-            { question: "고구려는 지리적으로 가까운 중국 북조의 문화를 받아들였고 중앙아시아 여러 민족과도 교류하였다.", answer: "O" },
-            { question: "신라는 초기에 고구려와 백제를 통해 중국 문화를 수용하다가 한강 유역 차지 이후 중국과 직접 교류하였다.", answer: "O" },
-            { question: "경주 계림로 보검은 신라와 서역의 교류를 보여 주는 유물이다.", answer: "O" },
-            { question: "우즈베키스탄 사마르칸트의 아프라시아브 궁전 벽화에는 백제 사신이 그려져 있다.", answer: "X" },
-            { question: "백제는 중국 남조와 활발하게 교류하였다.", answer: "O" },
-            { question: "신라는 처음부터 중국과 직접 교류하였다.", answer: "X" },
-            { question: "6세기 말 수가 중국을 통일하면서 동아시아 정세에 변화가 일어났다.", answer: "O" },
-            { question: "6세기 말 이후 동아시아에서 고구려·백제·돌궐·왜를 연결하는 세력과 신라·수(당)를 연결하는 세력이 대립하였다.", answer: "O" },
-            { question: "신라는 수에 도움을 요청하여 고구려를 견제하고자 하였다.", answer: "O" },
-            { question: "백제는 수와 손을 잡고 고구려에 대항하였다.", answer: "X" },
-            { question: "고구려는 당의 침입에 대비하여 국경 지역에 천리장성을 쌓았다.", answer: "O" },
-            { question: "6세기 말 고구려는 신라와 연합하여 수를 견제하였다.", answer: "X" },
-            { question: "수 문제는 30만 군대를 보내 고구려를 침공하였으나 성과 없이 돌아갔다.", answer: "O" },
-            { question: "수 양제는 113만 대군을 이끌고 고구려를 공격하였다.", answer: "O" },
-            { question: "을지문덕은 살수에서 수 양제의 30만 별동대를 크게 무찔렀다(살수 대첩, 612).", answer: "O" },
-            { question: "을지문덕은 안시성에서 수의 대군을 격파하였다.", answer: "X" },
-            { question: "수는 고구려와의 무리한 전쟁과 잇따른 내란으로 멸망하였다.", answer: "O" },
-            { question: "수 문제는 113만 대군을 이끌고 고구려를 침략하였다.", answer: "X" },
-            { question: "살수 대첩에서 고구려는 청야 전술로 수의 보급을 차단하여 승리하였다.", answer: "X" },
-            { question: "연개소문은 정변을 일으켜 실권을 장악한 뒤 당에 대해 강경한 정책을 펼쳤다.", answer: "O" },
-            { question: "당 태종은 연개소문의 정변을 구실로 고구려를 침략하였다.", answer: "O" },
-            { question: "안시성의 성주와 백성이 결사적으로 저항하여 당의 공격을 물리쳤다(안시성 전투, 645).", answer: "O" },
-            { question: "안시성 전투에서 을지문덕이 당군을 격파하였다.", answer: "X" },
-            { question: "계속된 전쟁으로 고구려의 국력은 점차 약화되었다.", answer: "O" },
-            { question: "당 태종은 고구려와의 전쟁에서 안시성을 함락하는 데 성공하였다.", answer: "X" },
-            { question: "백제 의자왕은 신라를 공격하여 대야성을 비롯한 여러 성을 빼앗았다.", answer: "O" },
-            { question: "신라는 김춘추를 고구려로 보내 도움을 요청하였으나 협상이 실패하였다.", answer: "O" },
-            { question: "나당 연합 결성 시 당은 대동강 이북의 땅을 넘겨받는 조건으로 신라의 제안을 수락하였다.", answer: "O" },
-            { question: "나당 연합 결성 시 당은 대동강 이남의 땅을 넘겨받는 조건으로 신라의 제안을 수락하였다.", answer: "X" },
-            { question: "신라는 먼저 당과 연합을 맺은 후 고구려에 도움을 요청하였다.", answer: "X" },
-            { question: "황산벌 전투에서 신라 김유신이 계백의 결사대를 물리쳤다.", answer: "O" },
-            { question: "나당 연합군이 사비성을 함락하면서 백제가 멸망하였다(660).", answer: "O" },
-            { question: "백제 부흥 운동은 복신·도침이 부여풍을 왕으로 추대하며 전개되었다.", answer: "O" },
-            { question: "백제 부흥 운동은 지배층 내분과 백강 전투 패배로 실패하였다.", answer: "O" },
-            { question: "백강 전투에는 신라·당·왜·백제 부흥군이 참전한 동아시아 국제전의 성격을 띠었다.", answer: "O" },
-            { question: "황산벌 전투에서 백제 계백이 신라군을 크게 무찔렀다.", answer: "X" },
-            { question: "백제 부흥 운동은 지배층의 단결로 성공을 거두었다.", answer: "X" },
-            { question: "연개소문이 죽은 뒤 그의 아들들 사이에 권력 다툼이 일어나 고구려 정치가 혼란해졌다.", answer: "O" },
-            { question: "나당 연합군이 평양성을 함락하면서 고구려가 멸망하였다(668).", answer: "O" },
-            { question: "고구려 부흥 운동은 검모잠이 안승을 왕으로 추대하며 전개되었다.", answer: "O" },
-            { question: "고구려 부흥 운동은 지배층의 단결로 성공하였다.", answer: "X" },
-            { question: "당은 백제와 고구려의 옛 중심지에 각각 웅진도독부와 안동도호부를 설치하여 한반도 전체를 지배하려 하였다.", answer: "O" },
-            { question: "신라는 매소성 전투에서 당의 육군을, 기벌포 전투에서 당의 수군을 격파하였다.", answer: "O" },
-            { question: "신라가 당을 몰아내고 삼국 통일을 완성한 해는 676년이다.", answer: "O" },
-            { question: "신라의 삼국 통일은 대동강 이북의 고구려 영토 대부분을 차지하지 못한 한계가 있다.", answer: "O" },
-            { question: "신라의 삼국 통일은 고구려·백제 유민과 힘을 합쳐 당을 몰아낸 자주적 측면이 있다.", answer: "O" },
-            { question: "삼국 통일 이후 신라는 고구려·백제의 문화를 수용하면서 새로운 민족 문화 발전의 기반을 마련하였다.", answer: "O" },
-            { question: "신라는 기벌포 전투에서 당의 육군을 크게 물리쳤다.", answer: "X" },
-            { question: "나당 전쟁 이후 당은 안동도호부를 한반도 내에 유지하며 계속 지배하였다.", answer: "X" }
+            { question: "신라 첨성대는 천문 관측을 위해 세워졌다.", answer: "O" },
+            { question: "고구려 무덤 중 굴식 돌방무덤은 벽화가 그려져 있는 것이 특징이다.", answer: "O" },
+            { question: "신라 돌무지덧널무덤은 도굴이 쉬운 구조이다.", answer: "X" },
+            { question: "백제 무령왕릉은 중국 남조의 영향을 받은 벽돌무덤이다.", answer: "O" },
+            { question: "삼국 가운데 일본과 교류가 가장 활발했던 나라는 백제이다.", answer: "O" },
+            { question: "6세기 말 돌궐-고구려-백제-왜를 잇는 남북 세력과 수(당)-신라를 잇는 동서 세력이 대립하였다.", answer: "O" },
+            { question: "살수 대첩은 수나라의 침입을 을지문덕이 물리친 전투이다.", answer: "O" },
+            { question: "안시성 전투는 당나라 태종의 공격을 막아낸 승리이다.", answer: "O" },
+            { question: "백제 의자왕은 신라의 대야성을 함락시키는 성과를 올렸다.", answer: "O" },
+            { question: "나당 연합군에 의해 백제는 660년, 고구려는 668년에 멸망하였다.", answer: "O" },
+            { question: "매소성 전투와 기벌포 전투에서 승리하며 신라는 삼국 통일을 완성하였다.", answer: "O" }
         ];
 
         function startQuiz() {
@@ -450,12 +373,11 @@
             const count = parseInt(document.getElementById('question-count').value);
 
             if(!sid || !sname) return alert("학번과 이름을 모두 입력해주세요!");
-            if(sid.length !== 5) return alert("학번은 반드시 5자리 숫자로 입력해주세요! (예: 30101)");
+            if(sid.length !== 5) return alert("학번은 반드시 5자리 숫자로 입력해주세요!");
 
             correctCount = 0; answeredCount = 0;
-            
             userInfo.id = sid; userInfo.name = sname; 
-            userInfo.max = count > allQuizzes.length ? allQuizzes.length : count; 
+            userInfo.max = Math.min(count, allQuizzes.length);
 
             selectedQuizzes = [...allQuizzes].sort(() => 0.5 - Math.random()).slice(0, userInfo.max);
             
@@ -463,47 +385,37 @@
             document.getElementById('quiz-section').classList.add('active');
             document.getElementById('progress-container').style.display = 'block';
             document.getElementById('status-container').style.display = 'flex';
-            
             loadQuiz();
         }
 
         function loadQuiz() {
-            isFirstAttempt = true; 
+            isFirstAttempt = true;
             const q = selectedQuizzes[currentQuizIndex];
             document.getElementById('question-text').innerText = q.question;
             document.getElementById('quiz-status').innerText = `${currentQuizIndex + 1} / ${userInfo.max}`;
-            
-            const percent = (currentQuizIndex / userInfo.max) * 100;
-            document.getElementById('progress-fill').style.width = percent + "%";
-            
+            document.getElementById('progress-fill').style.width = (currentQuizIndex / userInfo.max * 100) + "%";
             updateAccuracyDisplay();
         }
-        
+
         function updateAccuracyDisplay() {
             const accElement = document.getElementById('accuracy-status');
             if (answeredCount === 0) {
                 accElement.innerText = "정답률: -%";
-                accElement.style.color = "#333";
             } else {
                 const rate = Math.round((correctCount / answeredCount) * 100);
                 accElement.innerText = `정답률: ${rate}%`;
-                
-                if(rate >= 80) accElement.style.color = "var(--primary-blue)";
-                else if(rate >= 50) accElement.style.color = "#e67e22";
-                else accElement.style.color = "var(--primary-red)";
+                accElement.style.color = rate >= 80 ? "var(--primary-blue)" : (rate >= 50 ? "#e67e22" : "var(--primary-red)");
             }
         }
 
         function checkAnswer(choice) {
             const correct = selectedQuizzes[currentQuizIndex].answer;
-            
             if (isFirstAttempt) {
                 answeredCount++;
                 if (choice === correct) correctCount++;
                 isFirstAttempt = false;
                 updateAccuracyDisplay();
             }
-            
             if (choice === correct) {
                 if (correct === 'X') showSection('note-input-section');
                 else nextQuiz();
@@ -517,22 +429,17 @@
         function submitNote() {
             const txt = document.getElementById('note-input').value;
             if(txt.trim() === "") return alert("내용을 입력해주세요.");
-            
             const btn = document.getElementById('submit-btn');
-            btn.disabled = true; btn.innerText = "등록 중...";
-
-            const qKey = allQuizzes.indexOf(selectedQuizzes[currentQuizIndex]); 
-
+            btn.disabled = true;
             db.collection("quiz_notes").add({
-                quizId: qKey, author: `${userInfo.id} ${userInfo.name}`, text: txt,
+                quizId: allQuizzes.indexOf(selectedQuizzes[currentQuizIndex]),
+                author: `${userInfo.id} ${userInfo.name}`,
+                text: txt,
                 timestamp: firebase.firestore.FieldValue.serverTimestamp()
             }).then(() => {
                 document.getElementById('note-input').value = "";
-                btn.disabled = false; btn.innerText = "등록";
+                btn.disabled = false;
                 showOtherNotes();
-            }).catch(error => {
-                alert("오류: " + error.message);
-                btn.disabled = false; btn.innerText = "등록";
             });
         }
 
@@ -541,21 +448,14 @@
         function showOtherNotes() {
             showSection('note-view-section');
             const container = document.getElementById('note-list-container');
-            container.innerHTML = "<p style='text-align:center; color:#999;'>불러오는 중...</p>";
-            
-            const qKey = allQuizzes.indexOf(selectedQuizzes[currentQuizIndex]);
-
-            db.collection("quiz_notes").where("quizId", "==", qKey).orderBy("timestamp", "asc").get()
-              .then((querySnapshot) => {
-                  container.innerHTML = "";
-                  if (querySnapshot.empty) {
-                      container.innerHTML = "<p style='text-align:center; color:#999;'>등록된 오답 노트가 없습니다.</p>";
-                  } else {
-                      querySnapshot.forEach((doc) => {
-                          const n = doc.data();
-                          container.innerHTML += `<div class="note-item"><span class="note-author">${n.author}</span>: ${n.text}</div>`;
-                      });
-                  }
+            container.innerHTML = "로딩 중...";
+            db.collection("quiz_notes").where("quizId", "==", allQuizzes.indexOf(selectedQuizzes[currentQuizIndex]))
+              .orderBy("timestamp", "asc").get().then((snap) => {
+                  container.innerHTML = snap.empty ? "아직 오답노트가 없습니다." : "";
+                  snap.forEach(doc => {
+                      const n = doc.data();
+                      container.innerHTML += `<div class="note-item"><span class="note-author">${n.author}</span>: ${n.text}</div>`;
+                  });
               });
         }
 
@@ -573,82 +473,59 @@
             document.getElementById('progress-fill').style.width = "100%";
             document.getElementById('status-container').style.display = 'none';
             showSection('end-section');
-            
-            const finalRate = answeredCount === 0 ? 0 : Math.round((correctCount / answeredCount) * 100);
+            const finalRate = Math.round((correctCount / answeredCount) * 100);
             document.getElementById('final-msg').innerText = `🎉 완료! 최종 정답률: ${finalRate}%`;
-
             if (userInfo.max >= 30) {
                 document.getElementById('ranking-container').style.display = 'block';
                 saveAndLoadRanking(finalRate);
-            } else {
-                document.getElementById('ranking-container').style.display = 'none';
             }
         }
 
         function saveAndLoadRanking(rate) {
             const listEl = document.getElementById('ranking-list');
-            listEl.innerHTML = "<p style='text-align:center; color:#666;'>랭킹을 업데이트하고 있습니다... ⏳</p>";
-            
+            listEl.innerHTML = "업데이트 중...";
             db.collection("quiz_rankings").add({
                 author: `${userInfo.id} ${userInfo.name}`,
-                score: rate,
-                count: userInfo.max,
+                score: rate, count: userInfo.max,
                 timestamp: firebase.firestore.FieldValue.serverTimestamp()
             }).then(() => {
-                db.collection("quiz_rankings").orderBy("score", "desc").limit(10).get()
-                  .then(snapshot => {
-                      listEl.innerHTML = "";
-                      let rank = 1;
-                      snapshot.forEach(doc => {
-                          const data = doc.data();
-                          let medal = rank === 1 ? "🥇" : (rank === 2 ? "🥈" : (rank === 3 ? "🥉" : `<span style="display:inline-block; width:20px; text-align:center;">${rank}</span>`));
-                          listEl.innerHTML += `
-                            <div class="rank-item">
-                                <span><span class="rank-medal">${medal}</span> ${data.author}</span>
-                                <span style="color:#4a90e2;">${data.score}% <span style="font-size:0.8rem; color:#999;">(${data.count}제)</span></span>
-                            </div>`;
-                          rank++;
-                      });
-                  });
+                db.collection("quiz_rankings").orderBy("score", "desc").limit(10).get().then(snap => {
+                    listEl.innerHTML = "";
+                    let r = 1;
+                    snap.forEach(doc => {
+                        const d = doc.data();
+                        listEl.innerHTML += `<div class="rank-item"><span>${r}. ${d.author}</span> <b>${d.score}%</b></div>`;
+                        r++;
+                    });
+                });
             });
         }
 
-        // 비밀 관리자 모드: 제목 5번 연속 클릭 시 관리자 패널(두 개의 버튼) 표시
-        let count = 0;
+        function showSection(id) {
+            document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+            document.getElementById(id).classList.add('active');
+        }
+
+        let adminCount = 0;
         document.getElementById('quiz-title').onclick = () => {
-            count++;
-            if(count >= 5) { 
-                document.getElementById('admin-panel').style.display = 'flex'; 
-                count = 0; 
-            }
-            setTimeout(() => count = 0, 2000);
+            adminCount++;
+            if(adminCount >= 5) { document.getElementById('admin-panel').style.display = 'flex'; adminCount = 0; }
+            setTimeout(() => adminCount = 0, 2000);
         };
 
-        // 오답노트 초기화
         function resetNotes() {
-            if(confirm("모든 '오답 노트' 데이터를 완전히 삭제하시겠습니까?")) {
-                db.collection("quiz_notes").get().then((snap) => {
-                    const batch = db.batch();
-                    snap.forEach((doc) => { batch.delete(doc.ref); });
-                    return batch.commit();
-                }).then(() => {
-                    alert("오답 노트가 초기화되었습니다.");
-                    document.getElementById('admin-panel').style.display = 'none';
-                });
+            if(confirm("오답노트를 모두 삭제할까요?")) {
+                db.collection("quiz_notes").get().then(s => {
+                    const b = db.batch(); s.forEach(d => b.delete(d.ref)); return b.commit();
+                }).then(() => alert("삭제 완료"));
             }
         }
 
-        // 랭킹 초기화
         function resetRankings() {
-            if(confirm("모든 '랭킹(명예의 전당)' 데이터를 완전히 삭제하시겠습니까?")) {
-                db.collection("quiz_rankings").get().then((snap) => {
-                    const batch = db.batch();
-                    snap.forEach((doc) => { batch.delete(doc.ref); });
-                    return batch.commit();
-                }).then(() => {
-                    alert("랭킹 데이터가 초기화되었습니다.");
-                    document.getElementById('admin-panel').style.display = 'none';
-                });
+            if(confirm("랭킹을 모두 삭제할까요?")) {
+                db.collection("quiz_rankings").get().then(s => {
+                    const b = db.batch(); s.forEach(d => b.delete(d.ref)); return b.commit();
+                }).then(() => alert("삭제 완료"));
             }
         }
     </script>
