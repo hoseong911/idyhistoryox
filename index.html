@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>역사 OX 퀴즈</title>
     <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" />
-    
     <link href="https://fonts.googleapis.com/css2?family=Jua&display=swap" rel="stylesheet">
     
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
@@ -136,7 +135,6 @@
             box-shadow: 0 15px 50px rgba(0,0,0,0.3); z-index: 200; backdrop-filter: blur(5px);
         }
 
-        /* 정답 팝업 (초록색) */
         #success-toast {
             display: none; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
             background: rgba(235, 255, 240, 0.95); padding: 30px; border-radius: 20px;
@@ -144,7 +142,6 @@
             border: 2px solid var(--primary-green); width: 70%; opacity: 0;
         }
 
-        /* 오답 팝업 (빨간색) */
         #error-toast {
             display: none; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
             background: rgba(255, 235, 235, 0.95); padding: 30px; border-radius: 20px;
@@ -171,10 +168,24 @@
         .ranking-box { background: rgba(255, 255, 255, 0.8); border-radius: 20px; padding: 20px; margin: 25px 0; text-align: left; max-height: 250px; overflow-y: auto; }
         .rank-item { display: flex; justify-content: space-between; padding: 10px 8px; border-bottom: 1px solid #eee; font-size: 1rem; font-weight: 600; }
         
-        .notice { font-size: 0.9rem; color: #d63031; background: #fff5f5; padding: 12px; border-radius: 10px; margin-bottom: 15px; line-height: 1.4; }
+        .notice { font-size: 0.9rem; color: #d63031; background: #fff5f5; padding: 12px; border-radius: 10px; margin-bottom: 15px; line-height: 1.6; }
         .note-list { max-height: 180px; overflow-y: auto; text-align: left; background: rgba(255, 255, 255, 0.8); padding: 15px; border-radius: 15px; margin-bottom: 20px; }
         .note-item { margin-bottom: 10px; font-size: 0.95rem; border-bottom: 1px dashed #ddd; padding-bottom: 8px; line-height: 1.4; }
         .note-author { font-weight: bold; color: var(--primary-blue); }
+
+        #note-question-preview {
+            background: rgba(255, 255, 255, 0.7);
+            border-radius: 15px;
+            padding: 14px 16px;
+            margin-bottom: 14px;
+            font-size: 1.05rem;
+            font-weight: 700;
+            color: #333;
+            line-height: 1.5;
+            word-break: keep-all;
+            text-align: left;
+            border-left: 4px solid #4a90e2;
+        }
 
         @media screen and (max-width: 480px) {
             .glass-card { width: 92%; padding: 25px 20px; border-radius: 20px; }
@@ -185,6 +196,7 @@
             .main-btn { width: 95%; font-size: 1rem; padding: 12px 20px; }
             input[type="text"], input[type="number"], input[type="password"], select { width: 95%; font-size: 0.95rem; }
             .modal-overlay { padding: 30px 15px; }
+            #note-question-preview { font-size: 0.95rem; }
         }
     </style>
 </head>
@@ -227,8 +239,13 @@
         </div>
 
         <div id="note-input-section" class="section">
+            <div id="note-question-preview"></div>
             <h2 id="note-title" style="font-size: 1.6rem; color: var(--primary-blue);">정답입니다! (X) 💯</h2>
-            <div class="notice">다른 친구들도 참고하니 바르게 고쳐 적어주세요.</div>
+            <div class="notice">
+                다른 친구들도 참고하니 바르게 고쳐 적어주세요.<br>
+                틀린 내용 작성 시 다른 친구들의 오답노트를 확인할 수 있습니다.<br>
+                <span style="color:#888; font-size:0.85rem;">(건너뛰기 시 오답노트 확인 불가)</span>
+            </div>
             <input type="text" id="note-input" placeholder="틀린 이유나 올바른 사실을 적어주세요.">
             <div style="display: flex; flex-direction: column; align-items: center; gap: 8px;">
                 <button id="submit-btn" class="main-btn" style="background:linear-gradient(45deg, #4facfe, #00f2fe);" onclick="submitNote()">등록하기 📝</button>
@@ -318,10 +335,9 @@
         function showSuccessToast(callback) {
             const toast = document.getElementById('success-toast');
             toast.classList.remove('success-anim');
-            void toast.offsetWidth; 
+            void toast.offsetWidth;
             toast.style.display = 'block';
             toast.classList.add('success-anim');
-
             setTimeout(() => {
                 toast.style.display = 'none';
                 if(callback) callback();
@@ -331,10 +347,9 @@
         function showErrorToast(callback) {
             const toast = document.getElementById('error-toast');
             toast.classList.remove('error-anim');
-            void toast.offsetWidth; 
+            void toast.offsetWidth;
             toast.style.display = 'block';
             toast.classList.add('error-anim');
-
             setTimeout(() => {
                 toast.style.display = 'none';
                 if(callback) callback();
@@ -482,66 +497,66 @@
             { question: "백제 의자왕은 신라의 대야성을 함락시키는 성과를 올렸다.", answer: "O" },
             { question: "나당 연합군에 의해 백제는 660년, 고구려는 668년에 멸망하였다.", answer: "O" },
             { question: "매소성 전투와 기벌포 전투에서 승리하며 신라는 삼국 통일을 완성하였다.", answer: "O" },
-{ question: "부여는 왕 아래에 마가, 우가, 구가, 저가 등의 관리가 있었다.", answer: "O" },
-{ question: "옥저는 토지가 비옥하여 농경이 발달하였고, 소금과 해산물이 풍부하였다.", answer: "O" },
-{ question: "옥저는 동해안 함경도 지역을 중심으로 성장하였다.", answer: "O" },
-{ question: "동예는 같은 씨족끼리 혼인하지 않는 풍습이 있었다.", answer: "O" },
-{ question: "동예는 같은 씨족끼리 혼인하는 것을 장려하였다.", answer: "X" },
-{ question: "삼한에서는 신지, 읍차라고 부르는 군장들이 다스렸다.", answer: "O" },
-{ question: "고구려는 졸본에서 국내성으로 도읍을 옮긴 후 활발한 정복 활동을 펼쳤다.", answer: "O" },
-{ question: "고구려 태조왕은 동해안으로 진출하여 옥저와 동예를 정복하였다.", answer: "O" },
-{ question: "고구려 고국천왕의 진대법은 봄에 곡식을 빌려주고 겨울에 갚게 하는 빈민 구제 정책이었다.", answer: "O" },
-{ question: "고구려 고국원왕은 중국 전연의 침략을 받아 수도가 함락되기도 하였다.", answer: "O" },
-{ question: "고구려 장수왕은 충주 고구려비를 세워 한반도 중부까지 영토를 확장하였음을 보여 주었다.", answer: "O" },
-{ question: "백제 근초고왕은 북쪽으로 고구려를 공격하여 만주 지역까지 차지하였다.", answer: "X" },
-{ question: "백제 근초고왕은 중국 동진, 가야, 왜와 교류하며 활발한 대외 활동을 펼쳤다.", answer: "O" },
-{ question: "백제 고이왕은 3세기 중엽에 중앙 집권 체제의 기틀을 마련하였다.", answer: "O" },
-{ question: "백제 동성왕은 고구려에 대항하기 위해 신라와 혼인 관계를 맺어 나제 동맹을 강화하였다.", answer: "O" },
-{ question: "백제 동성왕은 중국 남조와 외교 관계를 끊고 독자 노선을 걸었다.", answer: "X" },
-{ question: "신라 눌지 마립간은 고구려의 남진 정책에 맞서 백제와 나제 동맹을 맺었다.", answer: "O" },
-{ question: "신라 소지 마립간은 백제 동성왕과 혼인 관계를 맺어 나제 동맹을 강화하였다.", answer: "O" },
-{ question: "신라 진흥왕은 백제 성왕과의 동맹을 지속하며 고구려에 대항하였다.", answer: "X" },
-{ question: "신라 진흥왕은 황룡사를 건립하여 왕실의 안녕을 기원하였다.", answer: "O" },
-{ question: "신라 화백 회의는 만장일치제로 중요한 일을 결정하였다.", answer: "O" },
-{ question: "백제의 정사암 회의에서는 귀족들이 모여 재상을 선출하고 국가 중요한 일을 결정하였다.", answer: "O" },
-{ question: "삼국 시대 탑은 초기에 주로 목탑이 만들어졌으나 점차 석탑으로 바뀌었다.", answer: "O" },
-{ question: "미륵 신앙이 널리 퍼지면서 삼국 시대에는 미륵보살상이 많이 만들어졌다.", answer: "O" },
-{ question: "백제 정림사지 5층 석탑은 목조탑의 형식을 계승한 석탑이다.", answer: "O" },
-{ question: "신라 분황사 모전 석탑은 돌을 벽돌 모양으로 다듬어 쌓은 탑이다.", answer: "O" },
-{ question: "고구려는 별자리를 그린 천문도를 만들어 천문 현상을 기록하였다.", answer: "O" },
-{ question: "신라는 태학을 세워 유교 경전을 가르쳤다.", answer: "X" },
-{ question: "고구려는 오경박사를 두어 유교 경전을 가르쳤다.", answer: "X" },
-{ question: "백제 고분 벽화의 사신도는 굴식 돌방무덤 내부에 그려져 있다.", answer: "O" },
-{ question: "신라 돌무지덧널무덤에서는 껴묻거리가 많이 발굴되었으나 벽화는 그릴 수 없었다.", answer: "O" },
-{ question: "고구려는 종이와 먹의 제조 방법을 일본에 전하였다.", answer: "O" },
-{ question: "신라는 배 만드는 기술과 둑 쌓는 기술을 일본에 전하였다.", answer: "O" },
-{ question: "가야 토기의 영향을 받아 일본에서 스에키가 제작되었다.", answer: "O" },
-{ question: "일본 다카마쓰 고분 벽화는 고구려 고분 벽화의 영향을 받은 것으로 본다.", answer: "O" },
-{ question: "고구려 금동 미륵보살 반가사유상과 일본 고류사 목조 미륵보살 반가사유상은 재질은 다르지만 모양이 유사하다.", answer: "O" },
-{ question: "신라는 경주 계림로에서 발견된 보검을 통해 서역과의 교류를 확인할 수 있다.", answer: "O" },
-{ question: "고구려는 중국 남조의 문화만을 받아들였다.", answer: "X" },
-{ question: "수 양제는 113만 대군을 이끌고 고구려를 침략하였으나 을지문덕에게 살수에서 크게 패하였다.", answer: "O" },
-{ question: "고구려가 수의 침략을 모두 막아낸 결과 수는 국력이 쇠퇴하여 결국 멸망하였다.", answer: "O" },
-{ question: "당 태종은 안시성을 함락하는 데 성공하고 고구려를 정복하였다.", answer: "X" },
-{ question: "연개소문은 정변 이후 당과 화친 관계를 유지하며 평화적 외교를 추구하였다.", answer: "X" },
-{ question: "나당 연합군은 황산벌 전투와 기벌포 전투를 거쳐 백제를 멸망시켰다.", answer: "O" },
-{ question: "백제 부흥 운동에서 흑치상지는 임존성을 거점으로 활동하였다.", answer: "O" },
-{ question: "고구려 부흥 운동에서 검모잠은 안승을 왕으로 추대하였다.", answer: "O" },
-{ question: "고구려 부흥 운동은 안승이 검모잠을 죽이고 신라로 망명하면서 사실상 실패하였다.", answer: "O" },
-{ question: "나당 전쟁에서 신라는 당의 육군을 기벌포에서, 수군을 매소성에서 격파하였다.", answer: "X" },
-{ question: "당은 백제의 옛 중심지에 안동도호부를 설치하였다.", answer: "X" },
-{ question: "신라의 삼국 통일은 외세인 당을 끌어들였다는 한계가 있으나, 이후 당을 몰아낸 자주적 측면도 있다.", answer: "O" },
-{ question: "삼국 통일 이후 신라는 옛 고구려·백제 출신 귀족에게도 관등을 부여하는 민족 융합 정책을 실시하였다.", answer: "O" },
-{ question: "신라는 삼국 통일 후 대동강 이북의 고구려 영토 대부분을 차지하였다.", answer: "X" },
-{ question: "백제 부흥 운동의 백강 전투에는 왜도 참전하여 동아시아 국제전의 성격을 띠었다.", answer: "O" },
-{ question: "고구려는 수·당과의 전쟁에서 견고한 산성 방어 체제와 강력한 철제 무기를 바탕으로 저항하였다.", answer: "O" },
-    { question: "백제는 웅진 시기에 중국 남조와의 교류를 완전히 끊었다.", answer: "X" },
-{ question: "신라 진흥왕은 함흥평야 일대까지 진출하여 동해안을 따라 북쪽으로 영토를 확장하였다.", answer: "O" },
-{ question: "가야는 백제와 신라 사이에 위치하여 두 나라의 압력을 받아 결국 연맹을 유지하지 못하였다.", answer: "O" },
-{ question: "삼국의 고분 양식 중 굴식 돌방무덤은 고구려에서 시작되어 백제와 신라에도 영향을 주었다.", answer: "O" },
-{ question: "백제는 일본에 불교뿐 아니라 한문과 유교 경전도 전하였다.", answer: "O" },
-{ question: "고구려 연개소문은 당과의 전쟁에서 패배한 후 스스로 물러났다.", answer: "X" },
-    { question: "신라는 한강 유역을 차지한 이후 당항성을 통해 중국과 직접 교류할 수 있게 되었다.", answer: "O" },
+            { question: "부여는 왕 아래에 마가, 우가, 구가, 저가 등의 관리가 있었다.", answer: "O" },
+            { question: "옥저는 토지가 비옥하여 농경이 발달하였고, 소금과 해산물이 풍부하였다.", answer: "O" },
+            { question: "옥저는 동해안 함경도 지역을 중심으로 성장하였다.", answer: "O" },
+            { question: "동예는 같은 씨족끼리 혼인하지 않는 풍습이 있었다.", answer: "O" },
+            { question: "동예는 같은 씨족끼리 혼인하는 것을 장려하였다.", answer: "X" },
+            { question: "삼한에서는 신지, 읍차라고 부르는 군장들이 다스렸다.", answer: "O" },
+            { question: "고구려는 졸본에서 국내성으로 도읍을 옮긴 후 활발한 정복 활동을 펼쳤다.", answer: "O" },
+            { question: "고구려 태조왕은 동해안으로 진출하여 옥저와 동예를 정복하였다.", answer: "O" },
+            { question: "고구려 고국천왕의 진대법은 봄에 곡식을 빌려주고 겨울에 갚게 하는 빈민 구제 정책이었다.", answer: "O" },
+            { question: "고구려 고국원왕은 중국 전연의 침략을 받아 수도가 함락되기도 하였다.", answer: "O" },
+            { question: "고구려 장수왕은 충주 고구려비를 세워 한반도 중부까지 영토를 확장하였음을 보여 주었다.", answer: "O" },
+            { question: "백제 근초고왕은 북쪽으로 고구려를 공격하여 만주 지역까지 차지하였다.", answer: "X" },
+            { question: "백제 근초고왕은 중국 동진, 가야, 왜와 교류하며 활발한 대외 활동을 펼쳤다.", answer: "O" },
+            { question: "백제 고이왕은 3세기 중엽에 중앙 집권 체제의 기틀을 마련하였다.", answer: "O" },
+            { question: "백제 동성왕은 고구려에 대항하기 위해 신라와 혼인 관계를 맺어 나제 동맹을 강화하였다.", answer: "O" },
+            { question: "백제 동성왕은 중국 남조와 외교 관계를 끊고 독자 노선을 걸었다.", answer: "X" },
+            { question: "신라 눌지 마립간은 고구려의 남진 정책에 맞서 백제와 나제 동맹을 맺었다.", answer: "O" },
+            { question: "신라 소지 마립간은 백제 동성왕과 혼인 관계를 맺어 나제 동맹을 강화하였다.", answer: "O" },
+            { question: "신라 진흥왕은 백제 성왕과의 동맹을 지속하며 고구려에 대항하였다.", answer: "X" },
+            { question: "신라 진흥왕은 황룡사를 건립하여 왕실의 안녕을 기원하였다.", answer: "O" },
+            { question: "신라 화백 회의는 만장일치제로 중요한 일을 결정하였다.", answer: "O" },
+            { question: "백제의 정사암 회의에서는 귀족들이 모여 재상을 선출하고 국가 중요한 일을 결정하였다.", answer: "O" },
+            { question: "삼국 시대 탑은 초기에 주로 목탑이 만들어졌으나 점차 석탑으로 바뀌었다.", answer: "O" },
+            { question: "미륵 신앙이 널리 퍼지면서 삼국 시대에는 미륵보살상이 많이 만들어졌다.", answer: "O" },
+            { question: "백제 정림사지 5층 석탑은 목조탑의 형식을 계승한 석탑이다.", answer: "O" },
+            { question: "신라 분황사 모전 석탑은 돌을 벽돌 모양으로 다듬어 쌓은 탑이다.", answer: "O" },
+            { question: "고구려는 별자리를 그린 천문도를 만들어 천문 현상을 기록하였다.", answer: "O" },
+            { question: "신라는 태학을 세워 유교 경전을 가르쳤다.", answer: "X" },
+            { question: "고구려는 오경박사를 두어 유교 경전을 가르쳤다.", answer: "X" },
+            { question: "백제 고분 벽화의 사신도는 굴식 돌방무덤 내부에 그려져 있다.", answer: "O" },
+            { question: "신라 돌무지덧널무덤에서는 껴묻거리가 많이 발굴되었으나 벽화는 그릴 수 없었다.", answer: "O" },
+            { question: "고구려는 종이와 먹의 제조 방법을 일본에 전하였다.", answer: "O" },
+            { question: "신라는 배 만드는 기술과 둑 쌓는 기술을 일본에 전하였다.", answer: "O" },
+            { question: "가야 토기의 영향을 받아 일본에서 스에키가 제작되었다.", answer: "O" },
+            { question: "일본 다카마쓰 고분 벽화는 고구려 고분 벽화의 영향을 받은 것으로 본다.", answer: "O" },
+            { question: "고구려 금동 미륵보살 반가사유상과 일본 고류사 목조 미륵보살 반가사유상은 재질은 다르지만 모양이 유사하다.", answer: "O" },
+            { question: "신라는 경주 계림로에서 발견된 보검을 통해 서역과의 교류를 확인할 수 있다.", answer: "O" },
+            { question: "고구려는 중국 남조의 문화만을 받아들였다.", answer: "X" },
+            { question: "수 양제는 113만 대군을 이끌고 고구려를 침략하였으나 을지문덕에게 살수에서 크게 패하였다.", answer: "O" },
+            { question: "고구려가 수의 침략을 모두 막아낸 결과 수는 국력이 쇠퇴하여 결국 멸망하였다.", answer: "O" },
+            { question: "당 태종은 안시성을 함락하는 데 성공하고 고구려를 정복하였다.", answer: "X" },
+            { question: "연개소문은 정변 이후 당과 화친 관계를 유지하며 평화적 외교를 추구하였다.", answer: "X" },
+            { question: "나당 연합군은 황산벌 전투와 기벌포 전투를 거쳐 백제를 멸망시켰다.", answer: "O" },
+            { question: "백제 부흥 운동에서 흑치상지는 임존성을 거점으로 활동하였다.", answer: "O" },
+            { question: "고구려 부흥 운동에서 검모잠은 안승을 왕으로 추대하였다.", answer: "O" },
+            { question: "고구려 부흥 운동은 안승이 검모잠을 죽이고 신라로 망명하면서 사실상 실패하였다.", answer: "O" },
+            { question: "나당 전쟁에서 신라는 당의 육군을 기벌포에서, 수군을 매소성에서 격파하였다.", answer: "X" },
+            { question: "당은 백제의 옛 중심지에 안동도호부를 설치하였다.", answer: "X" },
+            { question: "신라의 삼국 통일은 외세인 당을 끌어들였다는 한계가 있으나, 이후 당을 몰아낸 자주적 측면도 있다.", answer: "O" },
+            { question: "삼국 통일 이후 신라는 옛 고구려·백제 출신 귀족에게도 관등을 부여하는 민족 융합 정책을 실시하였다.", answer: "O" },
+            { question: "신라는 삼국 통일 후 대동강 이북의 고구려 영토 대부분을 차지하였다.", answer: "X" },
+            { question: "백제 부흥 운동의 백강 전투에는 왜도 참전하여 동아시아 국제전의 성격을 띠었다.", answer: "O" },
+            { question: "고구려는 수·당과의 전쟁에서 견고한 산성 방어 체제와 강력한 철제 무기를 바탕으로 저항하였다.", answer: "O" },
+            { question: "백제는 웅진 시기에 중국 남조와의 교류를 완전히 끊었다.", answer: "X" },
+            { question: "신라 진흥왕은 함흥평야 일대까지 진출하여 동해안을 따라 북쪽으로 영토를 확장하였다.", answer: "O" },
+            { question: "가야는 백제와 신라 사이에 위치하여 두 나라의 압력을 받아 결국 연맹을 유지하지 못하였다.", answer: "O" },
+            { question: "삼국의 고분 양식 중 굴식 돌방무덤은 고구려에서 시작되어 백제와 신라에도 영향을 주었다.", answer: "O" },
+            { question: "백제는 일본에 불교뿐 아니라 한문과 유교 경전도 전하였다.", answer: "O" },
+            { question: "고구려 연개소문은 당과의 전쟁에서 패배한 후 스스로 물러났다.", answer: "X" },
+            { question: "신라는 한강 유역을 차지한 이후 당항성을 통해 중국과 직접 교류할 수 있게 되었다.", answer: "O" },
         ];
 
         function startQuiz() {
@@ -553,15 +568,16 @@
             if(sid.length !== 5) return showAlert("학번을 5자리로 입력해주세요. 🔢<br><span style='font-size:0.9rem; color:#666;'>(예: 30101)</span>");
 
             correctCount = 0; answeredCount = 0;
-            userInfo.id = sid; userInfo.name = sname; 
+            userInfo.id = sid; userInfo.name = sname;
             userInfo.max = Math.min(count, allQuizzes.length);
 
             selectedQuizzes = [...allQuizzes].sort(() => 0.5 - Math.random()).slice(0, userInfo.max);
-            
+
             document.getElementById('login-section').classList.remove('active');
             document.getElementById('quiz-section').classList.add('active');
             document.getElementById('progress-container').style.display = 'block';
             document.getElementById('status-container').style.display = 'flex';
+            currentQuizIndex = 0;
             loadQuiz();
         }
 
@@ -586,18 +602,18 @@
         }
 
         function checkAnswer(choice) {
-            // 팝업 애니메이션 도중 연타하는 것을 완벽 방지
             if (!isFirstAttempt) return;
 
             const correct = selectedQuizzes[currentQuizIndex].answer;
+            const currentQuestion = selectedQuizzes[currentQuizIndex].question;
             answeredCount++;
             if (choice === correct) correctCount++;
             isFirstAttempt = false;
             updateAccuracyDisplay();
 
             if (choice === correct) {
-                // 정답을 맞춘 경우
                 if (correct === 'X') {
+                    document.getElementById('note-question-preview').innerText = "📌 " + currentQuestion;
                     document.getElementById('note-title').innerHTML = "정답입니다! (X) 💯";
                     document.getElementById('note-title').style.color = "var(--primary-blue)";
                     showSection('note-input-section');
@@ -607,15 +623,13 @@
                     });
                 }
             } else {
-                // 오답인 경우: 1.5초 토스트 후 자동으로 분기 이동
                 showErrorToast(() => {
                     if (correct === 'X') {
-                        // 틀렸지만 원래 정답이 X인 경우 오답노트로
+                        document.getElementById('note-question-preview').innerText = "📌 " + currentQuestion;
                         document.getElementById('note-title').innerHTML = "아쉽네요, 정답은 (X) 입니다! 📝";
                         document.getElementById('note-title').style.color = "var(--primary-red)";
                         showSection('note-input-section');
                     } else {
-                        // 틀렸고 원래 정답이 O인 경우 다음 문제로
                         nextQuiz();
                     }
                 });
@@ -625,10 +639,10 @@
         function submitNote() {
             const txt = document.getElementById('note-input').value;
             if(txt.trim() === "") return showAlert("내용을 입력해주세요.");
-            
+
             const btn = document.getElementById('submit-btn');
             btn.disabled = true; btn.innerText = "등록 중...";
-            
+
             db.collection("quiz_notes").add({
                 quizId: allQuizzes.indexOf(selectedQuizzes[currentQuizIndex]),
                 author: `${userInfo.id} ${userInfo.name}`,
@@ -712,10 +726,9 @@
 
         document.getElementById('quiz-title').onclick = () => {
             adminCount++;
-            clearTimeout(adminTimer); 
-            
-            if(adminCount >= 5) { 
-                adminCount = 0; 
+            clearTimeout(adminTimer);
+            if(adminCount >= 5) {
+                adminCount = 0;
                 document.getElementById('password-modal').style.display = 'block';
                 document.getElementById('admin-pwd').value = '';
                 document.getElementById('admin-pwd').focus();
