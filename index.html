@@ -49,7 +49,7 @@
         }
         .glass-card::-webkit-scrollbar { display: none; }
         h1, h2, .ox-btn, .jua-font { font-family: 'Jua', sans-serif; font-weight: normal; }
-        h1 { font-size: 1.8rem; margin-bottom: 30px; cursor: pointer; user-select: none; line-height: 1.4; word-break: keep-all; color: #333; }
+        h1 { font-size: 1.8rem; margin-bottom: 30px; line-height: 1.4; word-break: keep-all; color: #333; }
         h1 span.sub-title { font-size: 2.2rem; display: block; margin-top: 8px; color: #d35400; }
         .progress-container { width: 100%; height: 10px; background: rgba(255,255,255,0.4); border-radius: 10px; margin-bottom: 20px; overflow: hidden; display: none; }
         #progress-fill { height: 100%; width: 0%; background: linear-gradient(90deg, #4facfe, #00f2fe); transition: width 0.3s ease; }
@@ -61,7 +61,7 @@
         input[type="number"]::-webkit-outer-spin-button,
         input[type="number"]::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
         input[type="number"] { -moz-appearance: textfield; }
-        input[type="text"], input[type="number"], input[type="password"], select {
+        input[type="text"], input[type="number"], select {
             width: 90%; padding: 15px; border-radius: 15px; border: 1px solid #ddd;
             font-family: 'Pretendard', sans-serif; margin-bottom: 20px; font-size: 1rem;
             text-align: center; background: rgba(255,255,255,0.9); box-sizing: border-box;
@@ -128,40 +128,21 @@
             line-height: 1.5; word-break: keep-all; text-align: left;
             border-left: 4px solid #4a90e2;
         }
-        .rank-tab-btn {
-            font-size:0.85rem; padding:7px 14px; border-radius:20px;
-            border:2px solid #a29bfe; background:white; color:#a29bfe;
-            cursor:pointer; font-family:'Pretendard',sans-serif; font-weight:700;
-            transition: all 0.15s;
+        /* 관리자 모드 접속 하단 버튼 */
+        .admin-entry-btn {
+            display: block;
+            margin: 30px auto 0 auto;
+            font-size: 0.8rem;
+            color: #bbb;
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            font-family: 'Pretendard', sans-serif;
+            transition: color 0.2s ease;
         }
-        .rank-tab-btn.active { background:#a29bfe; color:white; }
-        .admin-rank-item {
-            display:flex; justify-content:space-between; align-items:center;
-            padding:9px 8px; border-bottom:1px solid #eee; font-size:0.9rem;
+        .admin-entry-btn:hover {
+            color: #666;
         }
-        .admin-rank-item:last-child { border-bottom:none; }
-        .admin-rank-num { font-weight:800; color:#a29bfe; width:28px; flex-shrink:0; }
-        .admin-rank-name { flex:1; color:#333; font-weight:600; }
-        .admin-rank-score { font-weight:800; color:#4a90e2; }
-        /* 관리자 오답노트 */
-        #admin-note-section { display: none; margin-top: 20px; text-align: left; }
-        #admin-note-list { max-height: 350px; overflow-y: auto; }
-        .admin-note-item {
-            background: rgba(255,255,255,0.9); border-radius: 12px; padding: 12px;
-            margin-bottom: 10px; font-size: 0.9rem; line-height: 1.5;
-            display: flex; justify-content: space-between; align-items: flex-start;
-            gap: 8px; border: 1px solid #eee;
-        }
-        .admin-note-content { flex: 1; }
-        .admin-note-q { font-size: 0.8rem; color: #888; margin-bottom: 4px; word-break: keep-all; }
-        .admin-note-author { font-weight: bold; color: var(--primary-blue); margin-bottom: 2px; }
-        .admin-note-text { color: #333; }
-        .admin-note-del {
-            background: var(--primary-red); color: white; border: none; border-radius: 8px;
-            font-size: 0.8rem; padding: 5px 10px; cursor: pointer; white-space: nowrap;
-            flex-shrink: 0; font-family: 'Pretendard', sans-serif; font-weight: 700;
-        }
-        .admin-note-del:hover { opacity: 0.8; }
         @media screen and (max-width: 480px) {
             .glass-card { width: 92%; padding: 25px 20px; border-radius: 20px; }
             h1 { font-size: 1.4rem; margin-bottom: 20px; }
@@ -169,7 +150,7 @@
             #question-text { font-size: 1.25rem; margin-bottom: 30px; }
             .ox-btn { width: 110px; font-size: 2.2rem; padding: 15px 0; }
             .main-btn { width: 95%; font-size: 1rem; padding: 12px 20px; }
-            input[type="text"], input[type="number"], input[type="password"], select { width: 95%; font-size: 0.95rem; }
+            input[type="text"], input[type="number"], select { width: 95%; font-size: 0.95rem; }
             .modal-overlay { padding: 30px 15px; }
             #note-question-preview { font-size: 0.95rem; }
         }
@@ -198,6 +179,8 @@
         <button class="main-btn start-btn" onclick="startQuiz()">퀴즈 시작하기 🚀</button>
         <p style="margin-top:25px; font-size:0.85rem; color:#999;">오류나 문제가 이상한 경우, 호성쌤에게 연락하기</p>
         <a href="https://open.kakao.com/o/smm3ixqi" target="_blank" style="display:inline-block; margin-top:6px; padding:8px 20px; background:rgba(255,220,0,0.85); color:#3a2e00; border-radius:30px; font-size:0.85rem; font-weight:800; text-decoration:none; font-family:'Pretendard',sans-serif; box-shadow:0 2px 8px rgba(0,0,0,0.1);">💬 메시지 보내기</a>
+        
+        <button class="admin-entry-btn" onclick="location.href='admin.html'">⚙️ 관리자 모드 접속</button>
     </div>
 
     <div id="quiz-section" class="section">
@@ -242,34 +225,6 @@
         <button class="main-btn" style="background:var(--btn-finish-gradient);" onclick="location.reload()">처음으로 돌아가기 🔄</button>
     </div>
 
-    <div id="admin-panel" style="display:none; margin-top:25px; flex-direction:column; align-items:center; gap:10px;">
-        <p style="font-weight:bold; color:var(--primary-red); margin:0;">🚨 관리자 모드 활성화됨</p>
-        <div style="display:flex; gap:10px; flex-wrap:wrap; justify-content:center;">
-            <button onclick="toggleAdminNotes()" style="font-size:0.9rem; background:#74b9ff; color:white; border:none; padding:12px; border-radius:12px; cursor:pointer;">X 바로잡기 관리 📋</button>
-            <button onclick="toggleAdminRanking()" style="font-size:0.9rem; background:#a29bfe; color:white; border:none; padding:12px; border-radius:12px; cursor:pointer;">랭킹 조회 🏆</button>
-            <button onclick="resetNotes()" style="font-size:0.9rem; background:#fab1a0; color:white; border:none; padding:12px; border-radius:12px; cursor:pointer;">전체 삭제</button>
-            <button onclick="resetRankings()" style="font-size:0.9rem; background:#e17055; color:white; border:none; padding:12px; border-radius:12px; cursor:pointer;">랭킹 초기화</button>
-            <button onclick="closeAdminPanel()" style="font-size:0.9rem; background:#b2bec3; color:white; border:none; padding:12px; border-radius:12px; cursor:pointer;">관리자 모드 닫기 ✕</button>
-        </div>
-        <!-- 랭킹 조회 섹션 -->
-        <div id="admin-ranking-section" style="display:none; margin-top:10px; width:100%; text-align:left;">
-            <p style="font-weight:bold; color:#555; margin-bottom:10px; font-size:0.95rem;">🏆 문제 수별 랭킹 조회</p>
-            <div style="display:flex; gap:8px; flex-wrap:wrap; justify-content:center; margin-bottom:12px;" id="rank-tabs">
-                <button onclick="loadAdminRanking(30)"  id="rank-tab-30"  class="rank-tab-btn">30문제</button>
-                <button onclick="loadAdminRanking(50)"  id="rank-tab-50"  class="rank-tab-btn">50문제</button>
-                <button onclick="loadAdminRanking(100)" id="rank-tab-100" class="rank-tab-btn">100문제</button>
-                <button onclick="loadAdminRanking(200)" id="rank-tab-200" class="rank-tab-btn">200문제</button>
-            </div>
-            <div id="admin-ranking-list" style="max-height:300px; overflow-y:auto; background:rgba(255,255,255,0.9); border-radius:12px; padding:12px; font-size:0.9rem;">
-                <p style="color:#aaa; text-align:center;">위에서 문제 수를 선택하세요.</p>
-            </div>
-        </div>
-        <div id="admin-note-section">
-            <p style="font-weight:bold; color:#555; margin-bottom:10px; font-size:0.95rem;">📋 전체 X 바로잡기 (개별 삭제 가능)</p>
-            <div id="admin-note-list"><p style="color:#aaa; font-size:0.9rem;">불러오는 중...</p></div>
-        </div>
-    </div>
-
     <div id="success-toast">
         <div class="jua-font" style="color:var(--primary-green); font-size:2.2rem; font-weight:bold;">정답입니다! 🎉</div>
     </div>
@@ -281,15 +236,6 @@
         <div id="alert-msg" class="jua-font" style="color:var(--text-main); margin-bottom:25px; font-size:1.4rem; line-height:1.4;"></div>
         <div style="display:flex; justify-content:center;">
             <button class="main-btn start-btn" onclick="closeAlert()" style="width:120px; padding:12px;">확인</button>
-        </div>
-    </div>
-
-    <div id="password-modal" class="modal-overlay">
-        <div class="jua-font" style="color:var(--text-main); margin-bottom:20px; font-size:1.6rem;">관리자 확인 🔑</div>
-        <input type="password" id="admin-pwd" placeholder="비밀번호를 입력하세요">
-        <div style="display:flex; justify-content:center; gap:10px;">
-            <button class="main-btn start-btn" onclick="checkAdminPassword()" style="width:100px; padding:12px; margin:0;">확인</button>
-            <button class="main-btn skip-btn" onclick="closePasswordModal()" style="width:100px; padding:12px; margin:0;">취소</button>
         </div>
     </div>
 </div>
@@ -308,7 +254,7 @@
 
     let userInfo = { id: "", name: "", max: 0 };
     let currentQuizIndex = 0, selectedQuizzes = [], correctCount = 0, answeredCount = 0, isFirstAttempt = true;
-    let alertCallback = null, adminNotesVisible = false;
+    let alertCallback = null;
 
     function showAlert(msg, callback = null) {
         document.getElementById('alert-msg').innerHTML = msg;
@@ -686,155 +632,6 @@
     function showSection(id) {
         document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
         document.getElementById(id).classList.add('active');
-    }
-
-    // ─── 관리자 랭킹 조회 ───
-    let adminRankingVisible = false;
-
-    function toggleAdminRanking() {
-        const section = document.getElementById('admin-ranking-section');
-        if (adminRankingVisible) {
-            section.style.display = 'none';
-            adminRankingVisible = false;
-        } else {
-            section.style.display = 'block';
-            adminRankingVisible = true;
-            loadAdminRanking(30); // 기본 30문제 탭
-        }
-    }
-
-    function loadAdminRanking(count) {
-        // 탭 활성화
-        [30, 50, 100, 200].forEach(n => {
-            const btn = document.getElementById(`rank-tab-${n}`);
-            if (btn) btn.classList.toggle('active', n === count);
-        });
-
-        const listEl = document.getElementById('admin-ranking-list');
-        listEl.innerHTML = "<p style='color:#aaa; text-align:center;'>불러오는 중... ⏳</p>";
-
-        db.collection("quiz_rankings")
-            .where("count", "==", count)
-            .orderBy("score", "desc")
-            .get()
-            .then(snap => {
-                if (snap.empty) {
-                    listEl.innerHTML = "<p style='color:#aaa; text-align:center;'>아직 기록이 없습니다.</p>";
-                    return;
-                }
-                listEl.innerHTML = "";
-                let r = 1;
-                snap.forEach(doc => {
-                    const d = doc.data();
-                    const icon = r===1?"🥇":(r===2?"🥈":(r===3?"🥉":""));
-                    const div = document.createElement('div');
-                    div.className = 'admin-rank-item';
-                    div.innerHTML = `
-                        <span class="admin-rank-num">${r}${icon}</span>
-                        <span class="admin-rank-name">${d.author}</span>
-                        <span class="admin-rank-score">${d.score}%</span>`;
-                    listEl.appendChild(div);
-                    r++;
-                });
-            }).catch(err => {
-                listEl.innerHTML = "<p style='color:red; text-align:center;'>불러오기 실패 😥</p>";
-                console.error(err);
-            });
-    }
-
-    // ─── 관리자 오답노트 개별 삭제 ───
-    function toggleAdminNotes() {
-        const section = document.getElementById('admin-note-section');
-        if (adminNotesVisible) {
-            section.style.display = 'none';
-            adminNotesVisible = false;
-        } else {
-            section.style.display = 'block';
-            adminNotesVisible = true;
-            loadAllAdminNotes();
-        }
-    }
-
-    function loadAllAdminNotes() {
-        const listEl = document.getElementById('admin-note-list');
-        listEl.innerHTML = "<p style='color:#aaa;font-size:0.9rem;'>불러오는 중...</p>";
-        db.collection("quiz_notes").get().then(snap => {
-            if (snap.empty) { listEl.innerHTML = "<p style='color:#aaa;font-size:0.9rem;'>등록된 오답노트가 없습니다.</p>"; return; }
-            listEl.innerHTML = "";
-            snap.forEach(doc => {
-                const n = doc.data();
-                const questionText = n.question || `문제 #${n.quizId}`;
-                const div = document.createElement('div');
-                div.className = 'admin-note-item';
-                div.id = `admin-note-${doc.id}`;
-                div.innerHTML = `
-                    <div class="admin-note-content">
-                        <div class="admin-note-q">📌 ${questionText}</div>
-                        <div class="admin-note-author">${n.author}</div>
-                        <div class="admin-note-text">${n.text}</div>
-                    </div>
-                    <button class="admin-note-del" onclick="deleteNote('${doc.id}')">삭제</button>`;
-                listEl.appendChild(div);
-            });
-        }).catch(err => { listEl.innerHTML = "<p style='color:red;font-size:0.9rem;'>불러오기 실패 😥</p>"; console.error(err); });
-    }
-
-    function deleteNote(docId) {
-        if (!confirm("이 오답노트를 삭제할까요?")) return;
-        db.collection("quiz_notes").doc(docId).delete().then(() => {
-            const el = document.getElementById(`admin-note-${docId}`);
-            if (el) el.remove();
-            const listEl = document.getElementById('admin-note-list');
-            if (listEl.children.length === 0) listEl.innerHTML = "<p style='color:#aaa;font-size:0.9rem;'>등록된 오답노트가 없습니다.</p>";
-        }).catch(err => { alert("삭제 실패 😥"); console.error(err); });
-    }
-
-    function resetNotes() {
-        if(confirm("오답노트를 모두 삭제할까요?")) {
-            db.collection("quiz_notes").get().then(s => {
-                const b = db.batch(); s.forEach(d => b.delete(d.ref)); return b.commit();
-            }).then(() => { alert("삭제 완료 ✔️"); if(adminNotesVisible) loadAllAdminNotes(); });
-        }
-    }
-
-    function resetRankings() {
-        if(confirm("랭킹을 모두 삭제할까요?")) {
-            db.collection("quiz_rankings").get().then(s => {
-                const b = db.batch(); s.forEach(d => b.delete(d.ref)); return b.commit();
-            }).then(() => alert("삭제 완료 ✔️"));
-        }
-    }
-
-    let adminCount = 0, adminTimer = null;
-    document.getElementById('quiz-title').onclick = () => {
-        adminCount++;
-        clearTimeout(adminTimer);
-        if(adminCount >= 5) {
-            adminCount = 0;
-            document.getElementById('password-modal').style.display = 'block';
-            document.getElementById('admin-pwd').value = '';
-            document.getElementById('admin-pwd').focus();
-        } else {
-            adminTimer = setTimeout(() => { adminCount = 0; }, 2000);
-        }
-    };
-
-    function checkAdminPassword() {
-        const pwd = document.getElementById('admin-pwd').value;
-        if (pwd === "ghtjd12!@") {
-            document.getElementById('password-modal').style.display = 'none';
-            document.getElementById('admin-panel').style.display = 'flex';
-        } else {
-            document.getElementById('password-modal').style.display = 'none';
-            showAlert("<span style='color:var(--primary-red);'>비밀번호가 틀렸습니다. 😅</span>");
-        }
-    }
-    function closePasswordModal() { document.getElementById('password-modal').style.display = 'none'; }
-
-    function closeAdminPanel() {
-        document.getElementById('admin-panel').style.display = 'none';
-        document.getElementById('admin-note-section').style.display = 'none';
-        adminNotesVisible = false;
     }
 </script>
 </body>
